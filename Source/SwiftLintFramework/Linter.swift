@@ -20,14 +20,12 @@ public struct Linter {
         ReturnArrowWhitespaceRule(),
         TrailingNewlineRule(),
         OperatorFunctionWhitespaceRule(),
-        ForceCastRule(),
         FileLengthRule(),
         TodoRule(),
         ColonRule(),
         TypeNameRule(),
         VariableNameRule(),
         TypeBodyLengthRule(),
-        FunctionBodyLengthRule(),
         NestingRule(),
         ControlStatementRule()
     ]

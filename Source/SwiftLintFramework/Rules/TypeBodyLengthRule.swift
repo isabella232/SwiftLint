@@ -15,11 +15,11 @@ public struct TypeBodyLengthRule: ASTRule, ParameterizedRule {
     public let identifier = "type_body_length"
 
     public let parameters = [
-        RuleParameter(severity: .VeryLow, value: 200),
-        RuleParameter(severity: .Low, value: 250),
-        RuleParameter(severity: .Medium, value: 300),
-        RuleParameter(severity: .High, value: 350),
-        RuleParameter(severity: .VeryHigh, value: 400)
+        RuleParameter(severity: .VeryLow, value: 350),
+        RuleParameter(severity: .Low, value: 400),
+        RuleParameter(severity: .Medium, value: 450),
+        RuleParameter(severity: .High, value: 500),
+        RuleParameter(severity: .VeryHigh, value: 550)
     ]
 
     public func validateFile(file: File) -> [StyleViolation] {
@@ -62,7 +62,7 @@ public struct TypeBodyLengthRule: ASTRule, ParameterizedRule {
                     return [StyleViolation(type: .Length,
                         location: location,
                         severity: parameter.severity,
-                        reason: "Type body should be span 200 lines or less: currently spans " +
+                        reason: "Type body should be span 350 lines or less: currently spans " +
                         "\(endLine - startLine) lines")]
                 }
             }
@@ -72,7 +72,7 @@ public struct TypeBodyLengthRule: ASTRule, ParameterizedRule {
 
     public let example = RuleExample(
         ruleName: "Type body Length Rule",
-        ruleDescription: "Type body should span 200 lines or less.",
+        ruleDescription: "Type body should span 350 lines or less.",
         nonTriggeringExamples: [],
         triggeringExamples: [],
         showExamples: false

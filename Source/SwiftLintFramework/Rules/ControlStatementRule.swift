@@ -15,7 +15,7 @@ public struct ControlStatementRule: Rule {
 
     public func validateFile(file: File) -> [StyleViolation] {
         return ["if", "for", "while"].flatMap { statementKind in
-            let pattern = "\(statementKind)\\s*\\([^,]*\\)\\s*\\{"
+            let pattern = "\(statementKind)\\s*\\([^,&|]*\\)\\s*\\{"
             return compact(file.matchPattern(pattern).map { match, syntaxKinds in
                 if syntaxKinds.first != .Keyword {
                     return nil
@@ -44,7 +44,9 @@ public struct ControlStatementRule: Rule {
             "for var index = 0; index < 42; index++ {\n",
             "while condition {\n",
             "} while condition {\n",
-            "do { ; } while condition {\n"
+            "do { ; } while condition {\n",
+            "if (a && b) || c {\n",
+            "if (a && b > 3) || (!d && e > f) {\n"
         ],
         triggeringExamples: [
             "if (condition) {\n",
@@ -58,7 +60,7 @@ public struct ControlStatementRule: Rule {
             "} while (condition) {\n",
             "} while(condition) {\n",
             "do { ; } while(condition) {\n",
-            "do { ; } while (condition) {\n"
+            "do { ; } while (condition) {\n",
         ]
     )
 }

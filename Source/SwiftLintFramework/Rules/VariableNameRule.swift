@@ -50,21 +50,18 @@ public struct VariableNameRule: ASTRule {
             let offset = flatMap(dictionary["key.offset"] as? Int64, { Int($0) }) {
             let location = Location(file: file, offset: offset)
             let nameCharacterSet = NSCharacterSet(charactersInString: name)
-            if !NSCharacterSet.alphanumericCharacterSet().isSupersetOfSet(nameCharacterSet) {
+            let validSet = NSCharacterSet.alphanumericCharacterSet().mutableCopy() as! NSMutableCharacterSet
+            validSet.addCharactersInString("_")
+            if !validSet.isSupersetOfSet(nameCharacterSet) {
                 violations.append(StyleViolation(type: .NameFormat,
                     location: location,
                     severity: .High,
                     reason: "Variable name should only contain alphanumeric characters: '\(name)'"))
-            } else if name.substringToIndex(name.startIndex.successor()).isUppercase() {
-                violations.append(StyleViolation(type: .NameFormat,
-                    location: location,
-                    severity: .High,
-                    reason: "Variable name should start with a lowercase character: '\(name)'"))
-            } else if count(name) < 3 || count(name) > 40 {
+            } else if count(name) < 2 || count(name) > 60 {
                 violations.append(StyleViolation(type: .NameFormat,
                     location: location,
                     severity: .Medium,
-                    reason: "Variable name should be between 3 and 40 characters in length: " +
+                    reason: "Variable name should be between 2 and 40 characters in length: " +
                     "'\(name)'"))
             }
         }
@@ -74,7 +71,7 @@ public struct VariableNameRule: ASTRule {
     public let example = RuleExample(
         ruleName: "Variable Name Rule",
         ruleDescription: "Variable name should only contain alphanumeric characters, " +
-        "start with a a lowercase character and be between 3 and 40 characters in length.",
+        "start with a a lowercase character and be between 2 and 40 characters in length.",
         nonTriggeringExamples: [],
         triggeringExamples: [],
         showExamples: false

@@ -22,7 +22,7 @@ public struct TrailingWhitespaceRule: Rule {
                 )
             )
         }.filter {
-            $0.trailingWhitespaceCount > 0
+            $0.trailingWhitespaceCount == 1
         }.map {
             StyleViolation(type: .TrailingWhitespace,
                 location: Location(file: file.path, line: $0.index),

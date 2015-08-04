@@ -59,11 +59,11 @@ public struct TypeNameRule: ASTRule {
                     location: location,
                     severity: .High,
                     reason: "Type name should start with an uppercase character: '\(name)'"))
-            } else if count(name) < 3 || count(name) > 40 {
+            } else if count(name) < 2 || count(name) > 60 {
                 violations.append(StyleViolation(type: .NameFormat,
                     location: location,
                     severity: .Medium,
-                    reason: "Type name should be between 3 and 40 characters in length: " +
+                    reason: "Type name should be between 2 and 60 characters in length: " +
                     "'\(name)'"))
             }
         }
@@ -73,7 +73,7 @@ public struct TypeNameRule: ASTRule {
     public let example = RuleExample(
         ruleName: "Type Name Rule",
         ruleDescription: "Type name should only contain alphanumeric characters, " +
-        "start with an uppercase character and between 3 and 40 characters in length.",
+        "start with an uppercase character and between 2 and 60 characters in length.",
         nonTriggeringExamples: [],
         triggeringExamples: [],
         showExamples: false
