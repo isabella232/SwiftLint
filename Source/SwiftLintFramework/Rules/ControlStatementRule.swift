@@ -46,6 +46,8 @@ public struct ControlStatementRule: Rule {
             "} while condition {\n",
             "do { ; } while condition {\n",
             "switch foo {\n",
+            "if (a && b) || c {\n",
+            "if (a && b > 3) || (!d && e > f) {\n",
         ],
         triggeringExamples: [
             "if (condition) {\n",

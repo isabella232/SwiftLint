@@ -63,11 +63,11 @@ public struct TypeNameRule: ASTRule {
                     location: location,
                     severity: .Error,
                     reason: "Type name should start with an uppercase character: '\(name)'"))
-            } else if name.characters.count < 3 || name.characters.count > 40 {
+            } else if name.characters.count < 2 || name.characters.count > 60 {
                 violations.append(StyleViolation(type: .NameFormat,
                     location: location,
                     severity: .Warning,
-                    reason: "Type name should be between 3 and 40 characters in length: " +
+                    reason: "Type name should be between 2 and 60 characters in length: " +
                     "'\(name)'"))
             }
         }
@@ -77,6 +77,7 @@ public struct TypeNameRule: ASTRule {
     public let example = RuleExample(
         ruleName: "Type Name Rule",
         ruleDescription: "Type name should only contain alphanumeric characters, " +
+<<<<<<< d2496d87d7ff893be0fb9ed7aded0cb675d77b6a
         "start with an uppercase character and between 3 and 40 characters in length.",
         nonTriggeringExamples: [
             "struct MyStruct {}",
@@ -88,6 +89,11 @@ public struct TypeNameRule: ASTRule {
             "private struct MyStruct_ {}",
             "struct My {}"
         ],
+=======
+        "start with an uppercase character and between 2 and 60 characters in length.",
+        nonTriggeringExamples: [],
+        triggeringExamples: [],
+>>>>>>> Update rules for our styleguide
         showExamples: false
     )
 }

@@ -54,7 +54,9 @@ public struct VariableNameRule: ASTRule {
             let location = Location(file: file, offset: offset)
             let name = name.nameStrippingLeadingUnderscoreIfPrivate(dictionary)
             let nameCharacterSet = NSCharacterSet(charactersInString: name)
-            if !NSCharacterSet.alphanumericCharacterSet().isSupersetOfSet(nameCharacterSet) {
+            let validSet = NSCharacterSet.alphanumericCharacterSet().mutableCopy() as! NSMutableCharacterSet
+            validSet.addCharactersInString("_")
+            if !validSet.isSupersetOfSet(nameCharacterSet) {
                 violations.append(StyleViolation(type: .NameFormat,
                     location: location,
                     severity: .Error,
@@ -64,7 +66,7 @@ public struct VariableNameRule: ASTRule {
                     location: location,
                     severity: .Error,
                     reason: "Variable name should start with a lowercase character: '\(name)'"))
-            } else if name.characters.count < 3 || name.characters.count > 40 {
+            } else if name.characters.count < 2 || name.characters.count > 60 {
                 violations.append(StyleViolation(type: .NameFormat,
                     location: location,
                     severity: .Warning,
