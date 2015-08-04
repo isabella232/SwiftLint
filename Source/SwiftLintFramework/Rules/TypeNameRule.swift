@@ -58,7 +58,7 @@ public struct TypeNameRule: ASTRule {
                     severity: .Error,
                     location: location,
                     reason: "Type name should start with an uppercase character: '\(name)'"))
-            } else if name.characters.count < 3 || name.characters.count > 40 {
+            } else if name.characters.count < 2 || name.characters.count > 60 {
                 violations.append(StyleViolation(ruleDescription: self.dynamicType.description,
                     location: location,
                     reason: "Type name should be between 3 and 40 characters in length: '\(name)'"))
