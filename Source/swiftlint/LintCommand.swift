@@ -70,7 +70,6 @@ struct LintCommand: CommandType {
             print(
                 "Done linting!" +
                 " Found \(numberOfViolations) violation\(violationSuffix)," +
-                " \(numberOfSeriousViolations) serious" +
                 " in \(filesToLint.count) file\(filesSuffix)"
             )
             if strict && numberOfViolations > 0 {
