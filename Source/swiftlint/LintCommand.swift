@@ -48,15 +48,12 @@ struct LintCommand: CommandType {
                 println("Linting Swift files at path \(path)")
             }
 
-            var numberOfViolations = 0, numberOfSeriousViolations = 0
+            var numberOfViolations = 0
             for (index, file) in enumerate(filesToLint) {
                 println("Linting '\(file.lastPathComponent)' (\(index + 1)/\(filesToLint.count))")
                 for violation in Linter(file: File(path: file)!).styleViolations {
                     println(violation)
                     numberOfViolations++
-                    if violation.severity.isError {
-                        numberOfSeriousViolations++
-                    }
                 }
             }
             let violationSuffix = (numberOfViolations != 1 ? "s" : "")
@@ -64,16 +61,15 @@ struct LintCommand: CommandType {
             println(
                 "Done linting!" +
                 " Found \(numberOfViolations) violation\(violationSuffix)," +
-                " \(numberOfSeriousViolations) serious" +
                 " in \(filesToLint.count) file\(filesSuffix)"
             )
-            if numberOfSeriousViolations <= 0 {
-                return success()
-            } else {
+            if numberOfViolations > 0 {
                 // This represents failure of the content (i.e. violations in the files linted)
                 // and not failure of the scanning process itself. The current command architecture
                 // doesn't discriminate between these types.
                 return failure(CommandantError<()>.CommandError(Box()))
+            } else {
+                return success()
             }
         }
         return failure(CommandantError<()>.UsageError(description: "No lintable files found at" +
