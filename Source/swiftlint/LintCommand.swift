@@ -103,6 +103,7 @@ struct LintCommand: CommandType {
         }
         return .Failure(CommandantError<()>.CommandError())
     }
+}
 
     private func filesToLintAtPath(path: String) -> [String] {
         let absolutePath = (path.absolutePathRepresentation() as NSString).stringByStandardizingPath
@@ -115,8 +116,9 @@ struct LintCommand: CommandType {
             } else if absolutePath.isSwiftFile() {
                 return [absolutePath]
             }
+        } else if absolutePath.isSwiftFile() {
+            return [absolutePath]
         }
-        return []
     }
 
     private func scriptInputFiles() -> Result<[String], CommandantError<()>> {
@@ -158,7 +160,7 @@ struct LintCommand: CommandType {
 }
 
 struct LintOptions: OptionsType {
-    let path: String
+    let paths: [String]
     let useSTDIN: Bool
     let configurationFile: String
     let strict: Bool
