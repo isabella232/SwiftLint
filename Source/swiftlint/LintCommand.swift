@@ -34,18 +34,19 @@ struct LintCommand: CommandType {
             }
 
             // Otherwise parse path.
-            return self.lint(options.path)
+            return self.lint(options.paths)
         }
     }
 
-    private func lint(path: String) -> Result<(), CommandantError<()>> {
-        let filesToLint = filesToLintAtPath(path)
+    private func lint(paths: [String]) -> Result<(), CommandantError<()>> {
+        let filesToLint = paths.flatMap(filesToLintAtPath)
+        let pathsString = " ".join(paths)
         if filesToLint.count > 0 {
 
-            if path == "" {
+            if paths.isEmpty {
                 println("Linting Swift files in current working directory")
             } else {
-                println("Linting Swift files at path \(path)")
+                println("Linting Swift files at paths \(pathsString)")
             }
 
             var numberOfViolations = 0
@@ -73,37 +74,38 @@ struct LintCommand: CommandType {
             }
         }
         return failure(CommandantError<()>.UsageError(description: "No lintable files found at" +
-            " path \(path)"))
-    }
-
-    private func filesToLintAtPath(path: String) -> [String] {
-        let absolutePath = path.absolutePathRepresentation()
-        var isDirectory: ObjCBool = false
-        if fileManager.fileExistsAtPath(absolutePath, isDirectory: &isDirectory) {
-            if isDirectory {
-                return fileManager.allFilesRecursively(directory: absolutePath).filter {
-                    $0.isSwiftFile()
-                }
-            } else if absolutePath.isSwiftFile() {
-                return [absolutePath]
-            }
-        }
-        return []
+            " path \(pathsString)"))
     }
 }
 
+private func filesToLintAtPath(path: String) -> [String] {
+    let absolutePath = path.absolutePathRepresentation()
+    var isDirectory: ObjCBool = false
+    if fileManager.fileExistsAtPath(absolutePath, isDirectory: &isDirectory) {
+        if isDirectory {
+            return fileManager.allFilesRecursively(directory: absolutePath).filter {
+                $0.isSwiftFile()
+            }
+        } else if absolutePath.isSwiftFile() {
+            return [absolutePath]
+        }
+    }
+    return []
+}
+
 struct LintOptions: OptionsType {
-    let path: String
+    let paths: [String]
     let useSTDIN: Bool
 
     static func create(path: String)(useSTDIN: Bool) -> LintOptions {
-        return LintOptions(path: path, useSTDIN: useSTDIN)
+        let paths = split(path) { $0 == "," }
+        return LintOptions(paths: paths, useSTDIN: useSTDIN)
     }
 
     static func evaluate(m: CommandMode) -> Result<LintOptions, CommandantError<()>> {
         return create
-            <*> m <| Option(key: "path", defaultValue: "", usage: "the path to the file or" +
-                        " directory to lint")
+            <*> m <| Option(key: "paths", defaultValue: "", usage: "the path to the file or" +
+                        " directory to lint (multiple separated by commas)")
             <*> m <| Option(key: "use-stdin", defaultValue: false, usage: "lint standard input")
     }
 }
