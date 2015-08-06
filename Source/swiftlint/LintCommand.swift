@@ -82,6 +82,7 @@ struct LintCommand: CommandType {
         return .Failure(CommandantError<()>.UsageError(description: "No lintable files found at" +
             " path \(path)"))
     }
+}
 
     private func filesToLintAtPath(path: String) -> [String] {
         let absolutePath = (path.absolutePathRepresentation() as NSString).stringByStandardizingPath
@@ -94,13 +95,15 @@ struct LintCommand: CommandType {
             } else if absolutePath.isSwiftFile() {
                 return [absolutePath]
             }
+        } else if absolutePath.isSwiftFile() {
+            return [absolutePath]
         }
-        return []
     }
+    return []
 }
 
 struct LintOptions: OptionsType {
-    let path: String
+    let paths: [String]
     let useSTDIN: Bool
     let configurationFile: String
     let strict: Bool
