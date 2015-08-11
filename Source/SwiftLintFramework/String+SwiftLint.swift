@@ -30,6 +30,10 @@ extension String {
     public var chomped: String {
         return stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet())
     }
+
+    public var stripped: String {
+        return stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+    }
 }
 
 extension NSString {
