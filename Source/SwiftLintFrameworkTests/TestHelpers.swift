@@ -17,9 +17,10 @@ func violations(string: String) -> [StyleViolation] {
 extension XCTestCase {
     func verifyRule(rule: RuleExample,
         type: StyleViolationType,
-        commentDoesntViolate: Bool = true) {
-        XCTAssertEqual(rule.nonTriggeringExamples.flatMap({violations($0)}), [])
-        XCTAssertEqual(rule.triggeringExamples.flatMap({violations($0).map({$0.type})}),
+        commentDoesntViolate: Bool = true)
+    {
+        XCTAssertEqual(rule.nonTriggeringExamples.flatMap({violations($0).filter({$0.type == type})}), [])
+        XCTAssertEqual(rule.triggeringExamples.flatMap({violations($0).map({$0.type}).filter({$0 == type})}),
             Array(count: rule.triggeringExamples.count, repeatedValue: type))
 
         if commentDoesntViolate {
