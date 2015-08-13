@@ -13,6 +13,7 @@ registry.register(LintCommand())
 registry.register(VersionCommand())
 registry.register(HelpCommand(registry: registry))
 registry.register(RulesCommand())
+registry.register(CacheCommand())
 
 registry.main(defaultVerb: LintCommand().verb) { error in
     fputs("\(error)\n", stderr)

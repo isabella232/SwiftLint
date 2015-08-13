@@ -87,4 +87,10 @@ class StringRuleTests: XCTestCase {
     func testColon() {
         verifyRule(ColonRule(), type: .Colon)
     }
+
+    func testDocumentationComments() {
+        verifyRule(DocumentationCommentRule().example,
+            type: .DocumentationComment,
+            commentDoesntViolate: false)
+    }
 }
