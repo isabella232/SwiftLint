@@ -90,4 +90,10 @@ class StringRuleTests: XCTestCase {
     func testColon() {
         verifyRule(ColonRule().example, type: .Colon)
     }
+
+    func testDocumentationComments() {
+        verifyRule(DocumentationCommentRule().example,
+            type: .DocumentationComment,
+            commentDoesntViolate: false)
+    }
 }
