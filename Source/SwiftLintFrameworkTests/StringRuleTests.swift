@@ -96,4 +96,10 @@ class StringRuleTests: XCTestCase {
     func testStatementPosition() {
         verifyRule(StatementPositionRule.description)
     }
+
+    func testDocumentationComments() {
+        verifyRule(DocumentationCommentRule().example,
+            type: .DocumentationComment,
+            commentDoesntViolate: false)
+    }
 }

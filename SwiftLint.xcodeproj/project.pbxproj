@@ -282,6 +282,7 @@
 				83894F211B0C928A006214E1 /* RulesCommand.swift */,
 				E83A0B341A5D382B0041A60A /* VersionCommand.swift */,
 				5499CA981A2394BD00783309 /* Supporting Files */,
+				C2ED24AC1B7543770097FE5C /* CacheCommand.swift */,
 			);
 			name = swiftlint;
 			path = Source/swiftlint;
@@ -454,6 +455,8 @@
 				CAF900121BED8B17006A371D /* VariableNameMaxLengthRule.swift */,
 				CAF900131BED8B17006A371D /* VariableNameMinLengthRule.swift */,
 				E88DEA931B099C0900A66CB0 /* VariableNameRule.swift */,
+				E57B23C01B1D8BF000DEA512 /* ReturnArrowWhitespaceRule.swift */,
+				C2ED24971B717E660097FE5C /* DocumentationCommentRule.swift */,
 			);
 			path = Rules;
 			sourceTree = "<group>";
