@@ -10,6 +10,8 @@ import Foundation
 import SwiftXPC
 import SourceKittenFramework
 
+private let kPragma = "// PRAGMA LINT: "
+
 public struct Linter {
     private let file: File
 
@@ -31,7 +33,25 @@ public struct Linter {
     ]
 
     public var styleViolations: [StyleViolation] {
-        return rules.flatMap { $0.validateFile(file) }
+        var activeRules = rules
+        if file.contents.hasPrefix(kPragma),
+            let range = file.contents.rangeOfString("\n")
+        {
+            let firstLine = file.contents.substringToIndex(range.endIndex)
+            let excludedIdentifiers = split(firstLine) { $0 == " " }.map { $0.stripped }
+
+            activeRules = rules.filter { rule in
+                for excludedIdentifier in excludedIdentifiers {
+                    if "-\(rule.identifier)" == excludedIdentifier {
+                        return false
+                    }
+                }
+
+                return true
+            }
+        }
+
+        return activeRules.flatMap { $0.validateFile(file) }
     }
 
     public var ruleExamples: [RuleExample] {
