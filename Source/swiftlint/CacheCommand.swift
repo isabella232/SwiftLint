@@ -19,6 +19,15 @@ struct CacheCommand: CommandType {
 
     func run(mode: CommandMode) -> Result<(), CommandantError<()>> {
         return CacheOptions.evaluate(mode).flatMap { options in
+            for directory in options.directories {
+                var isDirectory: ObjCBool = false
+                let exists = fileManager.fileExistsAtPath(directory, isDirectory: &isDirectory)
+                if !exists || !isDirectory {
+                    println("Directory doesn't exist at '\(directory)'")
+                    return failure(CommandantError<()>.CommandError(Box()))
+                }
+            }
+
             if let URL = NSURL(fileURLWithPath: options.cachePath) {
                 self.cache(URL, directories: options.directories, paths: options.paths)
                 return success()
