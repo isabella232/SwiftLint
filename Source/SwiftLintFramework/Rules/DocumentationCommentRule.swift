@@ -14,12 +14,12 @@ private enum ValidScope: String {
     case Internal = "source.lang.swift.accessibility.internal"
 }
 
-private struct ProType: Equatable {
+private struct ProtocolMember: Equatable {
     let name: String
     let type: SwiftDeclarationKind
 }
 
-private func ==(lhs: ProType, rhs: ProType) -> Bool {
+private func ==(lhs: ProtocolMember, rhs: ProtocolMember) -> Bool {
     return lhs.type == rhs.type && lhs.name == rhs.name
 }
 
@@ -33,7 +33,6 @@ public struct DocumentationCommentRule: Rule {
             let json: AnyObject = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil),
             let protocols = json as? [String: String]
         {
-            NSLog("loading cache: \(protocols)")
             return protocols
         }
 
@@ -46,7 +45,7 @@ public struct DocumentationCommentRule: Rule {
         return validateFile(file, dictionary: file.structure.dictionary)
     }
 
-    private func proTypesFromInherited(type: String) -> [ProType] {
+    private func protocolMembersFromInheritedType(type: String) -> [ProtocolMember] {
         if let path = DocumentationCommentRule.protocolsToPaths[type],
             let file = File(path: path),
             let substructure = file.structure.dictionary["key.substructure"] as? XPCArray
@@ -60,7 +59,7 @@ public struct DocumentationCommentRule: Rule {
                             let type = element["key.kind"] as? String,
                             let kind = SwiftDeclarationKind(rawValue: type)
                         {
-                            return [ProType(name: name, type: kind)]
+                            return [ProtocolMember(name: name, type: kind)]
                         }
 
                         return []
@@ -84,7 +83,7 @@ public struct DocumentationCommentRule: Rule {
 
         return structures
     }
-    
+
     private func protocolsFromStructure(structure: [XPCDictionary]) -> [XPCDictionary] {
         return structure.flatMap { element in
             if let kind = element["key.kind"] as? String,
@@ -93,11 +92,11 @@ public struct DocumentationCommentRule: Rule {
             {
                 return [element]
             }
-            
+
             return []
         }
     }
-    
+
     public func validateFile(file: File, dictionary: XPCDictionary) -> [StyleViolation] {
         return (dictionary["key.substructure"] as? XPCArray ?? []).flatMap { element in
             let element: XPCDictionary! = element as? XPCDictionary
@@ -113,9 +112,9 @@ public struct DocumentationCommentRule: Rule {
                     return []
                 }
 
-                var excluded = [ProType]()
+                var excluded = [ProtocolMember]()
                 for type in typeNames {
-                    excluded.extend(self.proTypesFromInherited(type))
+                    excluded.extend(self.protocolMembersFromInheritedType(type))
                 }
 
                 var violations = [StyleViolation]()
@@ -144,25 +143,25 @@ public struct DocumentationCommentRule: Rule {
                     return []
                 }
             }
-            
+
             return []
         }
     }
-    
-    private func shouldComment(element: XPCDictionary, excluded: [ProType]) -> Bool {
+
+    private func shouldComment(element: XPCDictionary, excluded: [ProtocolMember]) -> Bool {
         if !self.typeNeedsComment(element["key.kind"]) {
             return false
         }
-        
+
         if let name = element["key.name"] as? String where self.isNameExcluded(name) {
             return false
         }
-        
+
         let attributes = element["key.attributes"] as? XPCArray ?? []
         if self.attributesHasComment(attributes) {
             return false
         }
-        
+
         if self.isOverride(attributes) {
             return false
         }
@@ -174,7 +173,7 @@ public struct DocumentationCommentRule: Rule {
         if self.isExcludedProtocolMember(element, excludedMembers: excluded) {
             return false
         }
-        
+
         return true
     }
 
@@ -200,24 +199,22 @@ public struct DocumentationCommentRule: Rule {
         return false
     }
 
-    private func isExcludedProtocolMember(attributes: XPCDictionary, excludedMembers: [ProType]) -> Bool {
+    private func isExcludedProtocolMember(attributes: XPCDictionary, excludedMembers: [ProtocolMember]) -> Bool {
         if let name = attributes["key.name"] as? String,
             let type = attributes["key.kind"] as? String,
             let kind = SwiftDeclarationKind(rawValue: type)
         {
-            NSLog("checking \(name) \(kind.rawValue)")
-            let memberType = ProType(name: name, type: kind)
+            let memberType = ProtocolMember(name: name, type: kind)
             for excluded in excludedMembers {
                 if excluded == memberType {
-                    NSLog("Wow \(name) \(kind.rawValue)")
                     return true
                 }
             }
         }
-        
+
         return false
     }
-    
+
     private func isNameExcluded(name: String) -> Bool {
         if name.hasPrefix("init") {
             return true
@@ -226,10 +223,10 @@ public struct DocumentationCommentRule: Rule {
         } else if name == "hashValue" {
             return true
         }
-        
+
         return false
     }
-    
+
     private func isOverride(attributes: XPCArray?) -> Bool {
         return self.attributesContainString(attributes, string: "source.decl.attribute.override")
     }
@@ -237,11 +234,11 @@ public struct DocumentationCommentRule: Rule {
     private func isIBOutlet(attributes: XPCArray?) -> Bool {
         return self.attributesContainString(attributes, string: "source.decl.attribute.iboutlet")
     }
-    
+
     private func attributesHasComment(attributes: XPCArray?) -> Bool {
         return self.attributesContainString(attributes, string: "source.decl.attribute.__raw_doc_comment")
     }
-    
+
     private func attributesContainString(attributes: XPCArray?, string: String) -> Bool {
         for attribute in attributes ?? [] {
             if let dict = attribute as? XPCDictionary, let value = dict["key.attribute"] {
@@ -250,15 +247,15 @@ public struct DocumentationCommentRule: Rule {
                 }
             }
         }
-        
+
         return false
     }
-    
+
     private func scopeNeedsComment(scope: XPCRepresentable?) -> Bool {
         if let scope = scope as? String {
             return ValidScope(rawValue: scope) != nil
         }
-        
+
         return false
     }
 
@@ -271,7 +268,7 @@ public struct DocumentationCommentRule: Rule {
                 return true
             }
         }
-        
+
         return true
     }
 
@@ -284,7 +281,7 @@ public struct DocumentationCommentRule: Rule {
                 return false
             }
         }
-        
+
         return false
     }
 
@@ -297,10 +294,10 @@ public struct DocumentationCommentRule: Rule {
                 return false
             }
         }
-        
+
         return false
     }
-    
+
     private func typeNeedsComment(type: XPCRepresentable?) -> Bool {
         if let type = type as? String, let kind = SwiftDeclarationKind(rawValue: type) {
             switch kind {
@@ -310,10 +307,10 @@ public struct DocumentationCommentRule: Rule {
                 return false
             }
         }
-        
+
         return false
     }
-    
+
     public let example = RuleExample(
         ruleName: "Documentation Comment Rule",
         ruleDescription: "This rule checks if you have documented public and internal properties and classes",
