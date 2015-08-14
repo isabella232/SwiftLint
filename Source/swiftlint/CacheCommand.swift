@@ -24,6 +24,7 @@ struct CacheCommand: CommandType {
                 return success()
             }
 
+            println("Missing --cachePath argument")
             return failure(CommandantError<()>.CommandError(Box()))
         }
     }
@@ -63,13 +64,12 @@ struct CacheCommand: CommandType {
 
         var pathForProtocol = [String: String]()
         if let structure = file.structure.dictionary["key.substructure"] as? XPCArray {
-            for a in structure {
-                let contents = a as? XPCDictionary ?? [:]
+            for element in structure {
+                let contents = element as? XPCDictionary ?? [:]
                 if !self.isProtocol(contents) {
                     continue
                 }
 
-                let name = contents["key.name"]
                 if let name = contents["key.name"] as? String {
                     pathForProtocol[name] = path
                 }
@@ -79,8 +79,12 @@ struct CacheCommand: CommandType {
         return pathForProtocol
     }
 
-    private func isProtocol(d: XPCDictionary) -> Bool {
-        return d["key.kind"] as? String == "source.lang.swift.decl.protocol"
+    private func isProtocol(attributes: XPCDictionary) -> Bool {
+        if let kind = attributes["key.kind"] as? String, type = SwiftDeclarationKind(rawValue: kind) {
+            return type == .Protocol
+        }
+
+        return false
     }
 }
 
@@ -98,7 +102,6 @@ private func filesToLintAtPath(path: String) -> [String] {
     }
     return []
 }
-
 
 private struct CacheOptions: OptionsType {
     let cachePath: String
