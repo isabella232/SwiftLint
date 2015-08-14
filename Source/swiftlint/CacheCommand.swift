@@ -28,6 +28,13 @@ struct CacheCommand: CommandType {
                 }
             }
 
+            for path in options.paths {
+                if !fileManager.fileExistsAtPath(path) {
+                    println("File/Directory doesn't exist at '\(path)'")
+                    return failure(CommandantError<()>.CommandError(Box()))
+                }
+            }
+
             if let URL = NSURL(fileURLWithPath: options.cachePath) {
                 self.cache(URL, directories: options.directories, paths: options.paths)
                 return success()
