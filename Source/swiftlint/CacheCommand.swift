@@ -13,8 +13,6 @@ import SourceKittenFramework
 import SwiftLintFramework
 import SwiftXPC
 
-let cacheFile = "cache.json"
-
 struct CacheCommand: CommandType {
     let verb = "cache"
     let function = "Cache protocols and their paths"
@@ -40,41 +38,31 @@ struct CacheCommand: CommandType {
             let protocols = json as? [String: String]
         {
             pathForProtocol = protocols
-            NSLog("loading \(pathForProtocol)")
         } else {
             filesToLint += directories.flatMap(filesToLintAtPath)
         }
 
         let files = filesToLint.map { File(path: $0) }.filter { $0 != nil }.map { $0! }
-        NSLog("Files: \(files)")
         for file in files {
-            NSLog("checking \(file)")
             let protocols = self.protocolsFromFile(file)
             for (k, v) in protocols {
-                NSLog("adding \(k) \(v)")
                 pathForProtocol[k] = v
             }
         }
 
-        NSLog("protocols: \(pathForProtocol)")
-
         let dictionary = pathForProtocol as NSDictionary
         let JSON = NSJSONSerialization.dataWithJSONObject(dictionary, options: nil, error: nil)
-        NSLog("writing \(cacheURL)")
         let worked = JSON?.writeToURL(cacheURL, atomically: true)
-        NSLog("worked \(worked)")
     }
 
     private func protocolsFromFile(file: File) -> [String: String] {
         let path: String! = file.path
         if path == nil {
-            NSLog("path is bad")
             return [:]
         }
 
         var pathForProtocol = [String: String]()
         if let structure = file.structure.dictionary["key.substructure"] as? XPCArray {
-            NSLog("sub structure good")
             for a in structure {
                 let contents = a as? XPCDictionary ?? [:]
                 if !self.isProtocol(contents) {
@@ -82,7 +70,6 @@ struct CacheCommand: CommandType {
                 }
 
                 let name = contents["key.name"]
-                NSLog("Is protocol \(name) \(path)")
                 if let name = contents["key.name"] as? String {
                     pathForProtocol[name] = path
                 }
