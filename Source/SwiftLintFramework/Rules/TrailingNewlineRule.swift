@@ -13,13 +13,13 @@ public struct TrailingNewlineRule: Rule {
 
     public let identifier = "trailing_newline"
 
-    public func validateFile(file: File) -> [StyleViolation] {
+    public func validateFile(var file: File) -> [StyleViolation] {
         let string = file.contents
-        let start = advance(string.endIndex, -5, string.startIndex)
-        let range = Range<String.Index>(start: start, end: string.endIndex)
-        let substring = string[range]
+        let start = advance(string.endIndex, -2, string.startIndex)
+        let range = Range(start: start, end: string.endIndex)
+        let substring = string[range].utf16
         let newLineSet = NSCharacterSet.newlineCharacterSet()
-        let slices = split(substring.utf16, allowEmptySlices: true) { !newLineSet.characterIsMember($0) }
+        let slices = split(substring, allowEmptySlices: true) { !newLineSet.characterIsMember($0) }
 
         if let slice = slices.last where count(slice) != 1 {
             return [StyleViolation(type: .TrailingNewline,
