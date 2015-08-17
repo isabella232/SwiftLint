@@ -10,21 +10,8 @@ import Foundation
 import SourceKittenFramework
 
 extension String {
-    func lines() -> [Line] {
-        var lines = [Line]()
-        var lineIndex = 1
-        enumerateLines { line, stop in
-            lines.append((lineIndex++, line))
-        }
-        return lines
-    }
-
     func isUppercase() -> Bool {
         return self == uppercaseString
-    }
-
-    func countOfTailingCharactersInSet(characterSet: NSCharacterSet) -> Int {
-        return String(reverse(self)).countOfLeadingCharactersInSet(characterSet)
     }
 
     public var chomped: String {
