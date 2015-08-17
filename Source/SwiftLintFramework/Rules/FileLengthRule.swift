@@ -21,8 +21,8 @@ public struct FileLengthRule: ParameterizedRule {
         RuleParameter(severity: .VeryHigh, value: 2000)
     ]
 
-    public func validateFile(file: File) -> [StyleViolation] {
-        let lines = file.contents.lines()
+    public func validateFile(var file: File) -> [StyleViolation] {
+        let lines = file.lines
         for parameter in reverse(parameters) {
             if lines.count > parameter.value {
                 return [StyleViolation(type: .Length,
