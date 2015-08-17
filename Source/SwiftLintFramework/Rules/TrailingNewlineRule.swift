@@ -17,7 +17,7 @@ public struct TrailingNewlineRule: Rule {
         description: "Files should have a single trailing newline."
     )
 
-    public func validateFile(file: File) -> [StyleViolation] {
+    public func validateFile(var file: File) -> [StyleViolation] {
         let string = file.contents
         let start = string.endIndex.advancedBy(-2, limit: string.startIndex)
         let range = Range(start: start, end: string.endIndex)
