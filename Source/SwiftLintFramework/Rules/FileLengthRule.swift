@@ -19,9 +19,9 @@ public struct FileLengthRule: ParameterizedRule {
     ]
 
     public func validateFile(file: File) -> [StyleViolation] {
-        let lineCount = file.lines.count
-        for parameter in parameters.reverse() {
-            if lineCount > parameter.value {
+        let lines = file.lines
+        for parameter in reverse(parameters) {
+            if lines.count > parameter.value {
                 return [StyleViolation(type: .Length,
                     location: Location(file: file.path, line: lineCount),
                     severity: parameter.severity,
