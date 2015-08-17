@@ -33,7 +33,7 @@ public struct ReturnArrowWhitespaceRule: Rule {
             "func abc() ->Int {}\n",
             "func abc()  ->  Int {}\n",
             "var abc = {(param: Int) ->Bool in }\n",
-            "var abc = {(param: Int)->Bool in }\n"
+            "var abc = {(param: Int)->Bool in }\n",
         ]
     )
 
