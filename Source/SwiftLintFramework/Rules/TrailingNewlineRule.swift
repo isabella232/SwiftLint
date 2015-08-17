@@ -13,7 +13,7 @@ public struct TrailingNewlineRule: Rule {
 
     public let identifier = "trailing_newline"
 
-    public func validateFile(file: File) -> [StyleViolation] {
+    public func validateFile(var file: File) -> [StyleViolation] {
         let string = file.contents
         let start = string.endIndex.advancedBy(-2, limit: string.startIndex)
         let range = Range(start: start, end: string.endIndex)
