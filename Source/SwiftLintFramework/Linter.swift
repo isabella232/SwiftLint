@@ -32,6 +32,7 @@ public struct Linter {
         NestingRule(),
         ControlStatementRule(),
         DocumentationCommentRule(cachePath: Linter.cachePath),
+        HeaderCommentRule(),
     ]
 
     public var styleViolations: [StyleViolation] {
