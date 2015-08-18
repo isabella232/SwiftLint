@@ -9,8 +9,6 @@
 import SourceKittenFramework
 import SwiftXPC
 
-typealias Line = (index: Int, content: String)
-
 extension File {
     public func matchPattern(pattern: String, withSyntaxKinds syntaxKinds: [SyntaxKind]) ->
         [NSRange] {

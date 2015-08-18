@@ -13,29 +13,34 @@ public struct TrailingWhitespaceRule: Rule {
 
     public let identifier = "trailing_whitespace"
 
-    public func validateFile(file: File) -> [StyleViolation] {
-        return file.contents.lines().map { line in
-            (
-                index: line.index,
-                trailingWhitespaceCount: line.content.countOfTailingCharactersInSet(
-                    NSCharacterSet.whitespaceCharacterSet()
-                )
-            )
-        }.filter {
-            $0.trailingWhitespaceCount == 1
+    public func validateFile(var file: File) -> [StyleViolation] {
+        return file.lines.filter { line in
+            return self.lastCharacterIsWhitespace(line)
         }.map {
             StyleViolation(type: .TrailingWhitespace,
                 location: Location(file: file.path, line: $0.index),
                 severity: .Medium,
-                reason: "Line #\($0.index) should have no trailing whitespace: " +
-                "current has \($0.trailingWhitespaceCount) trailing whitespace characters")
+                reason: "Line #\($0.index) should have no trailing whitespace")
         }
+    }
+
+    private func lastCharacterIsWhitespace(line: Line) -> Bool {
+        if line.content.startIndex == line.content.endIndex {
+            return false
+        }
+
+        let start = advance(line.content.endIndex, -1, line.content.startIndex)
+        let range = Range(start: start, end: line.content.endIndex)
+        let substring = line.content[range].utf16
+
+        let char = substring[substring.startIndex]
+        return NSCharacterSet.whitespaceCharacterSet().characterIsMember(char)
     }
 
     public let example = RuleExample(
         ruleName: "Trailing Whitespace Rule",
         ruleDescription: "This rule checks whether you don't have any trailing whitespace.",
-        nonTriggeringExamples: [ "//\n" ],
+        nonTriggeringExamples: [ "//\n", "\n", "", "\n\n" ],
         triggeringExamples: [ "// \n" ],
         showExamples: false
     )

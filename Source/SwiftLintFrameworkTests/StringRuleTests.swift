@@ -34,11 +34,11 @@ class StringRuleTests: XCTestCase {
         XCTAssertEqual(violations(""), [StyleViolation(type: .TrailingNewline,
             location: Location(file: nil, line: 1),
             severity: .Medium,
-            reason: "File should have a single trailing newline: currently has 0")])
+            reason: "File should have a single trailing newline")])
         XCTAssertEqual(violations("//\n\n"), [StyleViolation(type: .TrailingNewline,
-            location: Location(file: nil, line: 3),
+            location: Location(file: nil, line: 1),
             severity: .Medium,
-            reason: "File should have a single trailing newline: currently has 2")])
+            reason: "File should have a single trailing newline")])
     }
 
     func testFileLengths() {
@@ -72,7 +72,8 @@ class StringRuleTests: XCTestCase {
 
     func testLinesShouldContainReturnArrowWhitespace() {
         verifyRule(ReturnArrowWhitespaceRule().example,
-            type: .ReturnArrowWhitespace)
+            type: .ReturnArrowWhitespace,
+            commentDoesntViolate: false)
     }
 
     func testForceCasting() {
@@ -89,5 +90,11 @@ class StringRuleTests: XCTestCase {
 
     func testColon() {
         verifyRule(ColonRule().example, type: .Colon)
+    }
+
+    func testDocumentationComments() {
+        verifyRule(DocumentationCommentRule().example,
+            type: .DocumentationComment,
+            commentDoesntViolate: false)
     }
 }

@@ -29,7 +29,8 @@ public struct Linter {
         VariableNameRule(),
         TypeBodyLengthRule(),
         NestingRule(),
-        ControlStatementRule()
+        ControlStatementRule(),
+        DocumentationCommentRule(),
     ]
 
     public var styleViolations: [StyleViolation] {
