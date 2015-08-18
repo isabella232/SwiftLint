@@ -14,6 +14,7 @@ private let kPragma = "// PRAGMA LINT: "
 
 public struct Linter {
     private let file: File
+    public static var cachePath: String!
     private let rules: [Rule]
     public let reporter: Reporter.Type
 

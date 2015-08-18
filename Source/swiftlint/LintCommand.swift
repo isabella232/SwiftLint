@@ -21,8 +21,12 @@ struct LintCommand: CommandType {
 
     func run(mode: CommandMode) -> Result<(), CommandantError<()>> {
         return LintOptions.evaluate(mode).flatMap { options in
+<<<<<<< 9a37746882b92b505939c922bdbf1c1b5a13eb85
             let configuration = Configuration(path: options.configurationFile,
                 optional: !Process.arguments.contains("--config"))
+=======
+            Linter.cachePath = options.cachePath
+>>>>>>> Pass cachePath to linter
             if options.useSTDIN {
                 let standardInput = NSFileHandle.fileHandleWithStandardInput()
                 let stdinData = standardInput.readDataToEndOfFile()
@@ -164,12 +168,13 @@ struct LintOptions: OptionsType {
     let useSTDIN: Bool
     let configurationFile: String
     let strict: Bool
+    let cachePath: String
     let useScriptInputFiles: Bool
 
     static func create(path: String)(useSTDIN: Bool)(configurationFile: String)(strict: Bool)
-        (useScriptInputFiles: Bool) -> LintOptions {
+        (cachePath: String)(useScriptInputFiles: Bool) -> LintOptions {
         return LintOptions(path: path, useSTDIN: useSTDIN, configurationFile: configurationFile,
-            strict: strict, useScriptInputFiles: useScriptInputFiles)
+            strict: strict, cachePath: cachePath, useScriptInputFiles: useScriptInputFiles)
     }
 
     static func evaluate(mode: CommandMode) -> Result<LintOptions, CommandantError<()>> {
@@ -186,6 +191,9 @@ struct LintOptions: OptionsType {
             <*> mode <| Option(key: "strict",
                 defaultValue: false,
                 usage: "fail on warnings")
+            <*> m <| Option(key: "cachePath",
+                defaultValue: "",
+                usage: "path for protocol cache")
             <*> mode <| Option(key: "use-script-input-files",
                 defaultValue: false,
                 usage: "read SCRIPT_INPUT_FILE* environment variables as files")
