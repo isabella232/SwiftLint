@@ -94,4 +94,10 @@ class StringRuleTests: XCTestCase {
             type: .DocumentationComment,
             commentDoesntViolate: false)
     }
+
+    func testHeaderComments() {
+        verifyRule(HeaderCommentRule().example,
+            type: .HeaderComment,
+            commentDoesntViolate: false)
+    }
 }
