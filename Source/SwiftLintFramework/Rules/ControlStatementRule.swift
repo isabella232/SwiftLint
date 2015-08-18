@@ -48,6 +48,7 @@ public struct ControlStatementRule: Rule {
             "switch foo {\n",
             "if (a && b) || c {\n",
             "if (a && b > 3) || (!d && e > f) {\n",
+            "switch foo {\n",
         ],
         triggeringExamples: [
             "if (condition) {\n",
