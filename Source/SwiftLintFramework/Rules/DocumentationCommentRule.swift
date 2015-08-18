@@ -24,11 +24,15 @@ private func ==(lhs: ProtocolMember, rhs: ProtocolMember) -> Bool {
 }
 
 public struct DocumentationCommentRule: Rule {
-    public init() {}
+    private let cachePath: String?
 
-    private static let protocolsToPaths: [String: String] = {
-        let path = NSFileManager.defaultManager().currentDirectoryPath
-        if let URL = NSURL(fileURLWithPath: path)?.URLByAppendingPathComponent("cache.json"),
+    public init(cachePath: String? = nil) {
+        self.cachePath = cachePath?.absolutePathRepresentation()
+    }
+
+    private func protocolsToPaths() -> [String: String] {
+        if let cachePath = self.cachePath,
+            let URL = NSURL(fileURLWithPath: cachePath),
             let data = NSData(contentsOfURL: URL),
             let json: AnyObject = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil),
             let protocols = json as? [String: String]
@@ -37,7 +41,7 @@ public struct DocumentationCommentRule: Rule {
         }
 
         return [:]
-    }()
+    }
 
     public let identifier = "documentation_comments"
 
@@ -45,8 +49,8 @@ public struct DocumentationCommentRule: Rule {
         return validateFile(file, dictionary: file.structure.dictionary)
     }
 
-    private func protocolMembersFromInheritedType(type: String) -> [ProtocolMember] {
-        if let path = DocumentationCommentRule.protocolsToPaths[type],
+    private func protocolMembersFromInheritedType(type: String, fromPaths paths: [String: String]) -> [ProtocolMember] {
+        if let path = paths[type],
             let file = File(path: path),
             let substructure = file.structure.dictionary["key.substructure"] as? XPCArray
         {
@@ -112,9 +116,10 @@ public struct DocumentationCommentRule: Rule {
                     return []
                 }
 
+                let paths = self.protocolsToPaths()
                 var excluded = [ProtocolMember]()
                 for type in typeNames {
-                    excluded.extend(self.protocolMembersFromInheritedType(type))
+                    excluded.extend(self.protocolMembersFromInheritedType(type, fromPaths: paths))
                 }
 
                 var violations = [StyleViolation]()

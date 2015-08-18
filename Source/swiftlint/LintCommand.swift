@@ -21,6 +21,7 @@ struct LintCommand: CommandType {
 
     func run(mode: CommandMode) -> Result<(), CommandantError<()>> {
         return LintOptions.evaluate(mode).flatMap { options in
+            Linter.cachePath = options.cachePath
             if options.useSTDIN {
                 let standardInput = NSFileHandle.fileHandleWithStandardInput()
                 let stdinData = standardInput.readDataToEndOfFile()
@@ -96,10 +97,11 @@ private func filesToLintAtPath(path: String) -> [String] {
 struct LintOptions: OptionsType {
     let paths: [String]
     let useSTDIN: Bool
+    let cachePath: String
 
-    static func create(path: String)(useSTDIN: Bool) -> LintOptions {
+    static func create(path: String)(useSTDIN: Bool)(cachePath: String) -> LintOptions {
         let paths = split(path) { $0 == "," }
-        return LintOptions(paths: paths, useSTDIN: useSTDIN)
+        return LintOptions(paths: paths, useSTDIN: useSTDIN, cachePath: cachePath)
     }
 
     static func evaluate(m: CommandMode) -> Result<LintOptions, CommandantError<()>> {
@@ -107,5 +109,6 @@ struct LintOptions: OptionsType {
             <*> m <| Option(key: "paths", defaultValue: "", usage: "the path to the file or" +
                         " directory to lint (multiple separated by commas)")
             <*> m <| Option(key: "use-stdin", defaultValue: false, usage: "lint standard input")
+            <*> m <| Option(key: "cachePath", defaultValue: "", usage: "path for protocol cache")
     }
 }

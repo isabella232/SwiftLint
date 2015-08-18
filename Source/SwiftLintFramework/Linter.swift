@@ -14,6 +14,7 @@ private let kPragma = "// PRAGMA LINT: "
 
 public struct Linter {
     private let file: File
+    public static var cachePath: String!
 
     private let rules: [Rule] = [
         LineLengthRule(),
@@ -30,7 +31,7 @@ public struct Linter {
         TypeBodyLengthRule(),
         NestingRule(),
         ControlStatementRule(),
-        DocumentationCommentRule(),
+        DocumentationCommentRule(cachePath: Linter.cachePath),
     ]
 
     public var styleViolations: [StyleViolation] {
