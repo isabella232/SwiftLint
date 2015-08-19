@@ -33,6 +33,7 @@ public struct Linter {
         ControlStatementRule(),
         DocumentationCommentRule(cachePath: Linter.cachePath),
         HeaderCommentRule(),
+        ObjcIdentifierRule(),
     ]
 
     public var styleViolations: [StyleViolation] {

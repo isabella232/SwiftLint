@@ -103,4 +103,10 @@ class StringRuleTests: XCTestCase {
             type: .HeaderComment,
             commentDoesntViolate: false)
     }
+
+    func testObjcIdentifier() {
+        verifyRule(ObjcIdentifierRule().example,
+            type: .ObjcIdentifier,
+            commentDoesntViolate: false)
+    }
 }
