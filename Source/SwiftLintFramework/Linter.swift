@@ -33,7 +33,6 @@ public struct Linter {
         ControlStatementRule(),
         DocumentationCommentRule(cachePath: Linter.cachePath),
         HeaderCommentRule(),
-        SelectorRule(),
         ObjcIdentifierRule(),
     ]
 
