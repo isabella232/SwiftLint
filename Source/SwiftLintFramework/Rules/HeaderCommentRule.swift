@@ -13,7 +13,7 @@ public struct HeaderCommentRule: Rule {
 
     public let identifier = "header_comment"
 
-    private let regex = NSRegularExpression(pattern: "//\\s+Copyright",
+    private static let regex = NSRegularExpression(pattern: "//\\s+Copyright",
         options: nil, error: nil)!
 
     public func validateFile(var file: File) -> [StyleViolation] {
@@ -25,7 +25,8 @@ public struct HeaderCommentRule: Rule {
             }
 
             let range = NSRange(location: 0, length: count(content))
-            let matches = regex.matchesInString(content, options: nil, range: range)
+            let matches = HeaderCommentRule.regex.matchesInString(content,
+                options: nil, range: range)
             if matches.count > 0 {
                 return [StyleViolation(type: .HeaderComment,
                     location: Location(file: file, offset: line.index),
@@ -35,7 +36,6 @@ public struct HeaderCommentRule: Rule {
 
         return []
     }
-
 
     public let example = RuleExample(ruleName: "Header Comment",
         ruleDescription: "Files should not have header comments",
