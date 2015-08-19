@@ -14,7 +14,6 @@
 		83D71E2B1B131EED000395DE /* AnsiCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D71E231B131C11000395DE /* AnsiCode.swift */; };
 		83D71E2C1B131EF0000395DE /* StructuredText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83894F231B0CAD41006214E1 /* StructuredText.swift */; };
 		C245C22E1B83D7DD00EAD486 /* HeaderCommentRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245C22C1B83D7B100EAD486 /* HeaderCommentRule.swift */; };
-		C245C23B1B83FF3E00EAD486 /* SelectorRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245C2391B83FF3700EAD486 /* SelectorRule.swift */; };
 		C245C23E1B84040100EAD486 /* ObjcIdentifierRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C245C23C1B8403D400EAD486 /* ObjcIdentifierRule.swift */; };
 		C2ED24991B7180630097FE5C /* DocumentationCommentRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2ED24971B717E660097FE5C /* DocumentationCommentRule.swift */; };
 		C2ED24AD1B7543770097FE5C /* CacheCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2ED24AC1B7543770097FE5C /* CacheCommand.swift */; };
@@ -131,7 +130,6 @@
 		83D71E231B131C11000395DE /* AnsiCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnsiCode.swift; sourceTree = "<group>"; };
 		83D71E261B131EB5000395DE /* RuleExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuleExample.swift; sourceTree = "<group>"; };
 		C245C22C1B83D7B100EAD486 /* HeaderCommentRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderCommentRule.swift; sourceTree = "<group>"; };
-		C245C2391B83FF3700EAD486 /* SelectorRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectorRule.swift; sourceTree = "<group>"; };
 		C245C23C1B8403D400EAD486 /* ObjcIdentifierRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjcIdentifierRule.swift; sourceTree = "<group>"; };
 		C2ED24971B717E660097FE5C /* DocumentationCommentRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentationCommentRule.swift; sourceTree = "<group>"; };
 		C2ED24AC1B7543770097FE5C /* CacheCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheCommand.swift; sourceTree = "<group>"; };
@@ -432,7 +430,6 @@
 				E88DEA831B0990F500A66CB0 /* ColonRule.swift */,
 				65454F451B14D73800319A6C /* ControlStatementRule.swift */,
 				C245C22C1B83D7B100EAD486 /* HeaderCommentRule.swift */,
-				C245C2391B83FF3700EAD486 /* SelectorRule.swift */,
 				C245C23C1B8403D400EAD486 /* ObjcIdentifierRule.swift */,
 				E88DEA891B0992B300A66CB0 /* FileLengthRule.swift */,
 				E88DEA7F1B09903300A66CB0 /* ForceCastRule.swift */,
