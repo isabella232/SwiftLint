@@ -104,6 +104,12 @@ class StringRuleTests: XCTestCase {
             commentDoesntViolate: false)
     }
 
+    func testSelector() {
+        verifyRule(SelectorRule().example,
+            type: .Selector,
+            commentDoesntViolate: false)
+    }
+
     func testObjcIdentifier() {
         verifyRule(ObjcIdentifierRule().example,
             type: .ObjcIdentifier,
