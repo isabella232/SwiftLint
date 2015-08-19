@@ -21,6 +21,7 @@ public enum StyleViolationType: String, CustomStringConvertible {
     case ControlStatement           = "Control Statement Parentheses"
     case DocumentationComment       = "Documentation Comment"
     case HeaderComment              = "Header Comment"
+    case ObjcIdentifier             = "ObjC identifier"
 
     public var description: String { return rawValue }
 }
