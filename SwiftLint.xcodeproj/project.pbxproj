@@ -438,7 +438,6 @@
 				695BE9CE1BDFD92B0071E985 /* CommaRule.swift */,
 				65454F451B14D73800319A6C /* ControlStatementRule.swift */,
 				C245C22C1B83D7B100EAD486 /* HeaderCommentRule.swift */,
-				C245C2391B83FF3700EAD486 /* SelectorRule.swift */,
 				C245C23C1B8403D400EAD486 /* ObjcIdentifierRule.swift */,
 				E88DEA891B0992B300A66CB0 /* FileLengthRule.swift */,
 				E88DEA7F1B09903300A66CB0 /* ForceCastRule.swift */,
