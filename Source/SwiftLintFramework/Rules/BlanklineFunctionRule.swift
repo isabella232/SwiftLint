@@ -13,7 +13,7 @@ public struct BlanklineFunctionRule: Rule {
 
     public let identifier = "blankline_function"
 
-    private static let regex = NSRegularExpression(pattern: "(struct|class|enum|extension)[^\\{]*\\{\\n[^\\n]*func\\s",
+    private static let regex = NSRegularExpression(pattern: "(struct|protocol|class|enum|extension)[^\\{]*\\{\\n[^\\n]*func\\s",
         options: nil, error: nil)!
 
     public func validateFile(var file: File) -> [StyleViolation] {
@@ -41,6 +41,7 @@ public struct BlanklineFunctionRule: Rule {
             "enum Foo {\nfunc bar() {}}",
             "extension Foo {\nfunc bar() {}}",
             "extension Foo {\nprivate func bar() {}}",
+            "protocol Foo {\n func bar() }",
         ]
     )
 }
