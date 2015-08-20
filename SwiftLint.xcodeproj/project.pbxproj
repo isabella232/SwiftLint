@@ -439,6 +439,7 @@
 				65454F451B14D73800319A6C /* ControlStatementRule.swift */,
 				C245C22C1B83D7B100EAD486 /* HeaderCommentRule.swift */,
 				C2483C411B854A110023C0D0 /* BlanklineFunctionRule.swift */,
+				C2E10B3B1B863F8000CFD5E4 /* MultilineClosureArgumentRule.swift */,
 				C245C23C1B8403D400EAD486 /* ObjcIdentifierRule.swift */,
 				E88DEA891B0992B300A66CB0 /* FileLengthRule.swift */,
 				E88DEA7F1B09903300A66CB0 /* ForceCastRule.swift */,
