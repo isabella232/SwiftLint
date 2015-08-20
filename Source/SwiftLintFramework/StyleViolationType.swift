@@ -23,6 +23,7 @@ public enum StyleViolationType: String, CustomStringConvertible {
     case HeaderComment              = "Header Comment"
     case ObjcIdentifier             = "ObjC identifier"
     case BlanklineFunction          = "Blankline function"
+    case MultilineClosureArgument   = "Multi-line closure argument"
 
     public var description: String { return rawValue }
 }

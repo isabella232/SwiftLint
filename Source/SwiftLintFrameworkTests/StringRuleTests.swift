@@ -112,4 +112,10 @@ class StringRuleTests: XCTestCase {
             type: .BlanklineFunction,
             commentDoesntViolate: false)
     }
+
+    func testMultilineClosureArgument() {
+        verifyRule(MultilineClosureArgumentRule().example,
+            type: .MultilineClosureArgument,
+            commentDoesntViolate: false)
+    }
 }
