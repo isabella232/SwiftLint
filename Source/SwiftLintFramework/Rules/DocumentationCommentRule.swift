@@ -186,6 +186,7 @@ public struct DocumentationCommentRule: Rule {
         "^CardIOPaymentViewControllerDelegate$",
         "^CLLocationManagerDelegate$",
         "^GMSMapViewDelegate$",
+        "^TuneDelegate$",
         "^UI\\w+(Delegate|DataSource)\\w*$",
         "^UISearchResultsUpdating$",
     ]
