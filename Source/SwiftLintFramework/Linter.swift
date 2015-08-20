@@ -34,6 +34,7 @@ public struct Linter {
         DocumentationCommentRule(cachePath: Linter.cachePath),
         HeaderCommentRule(),
         ObjcIdentifierRule(),
+        BlanklineFunctionRule(),
     ]
 
     public var styleViolations: [StyleViolation] {

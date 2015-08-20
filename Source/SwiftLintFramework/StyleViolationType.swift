@@ -22,6 +22,7 @@ public enum StyleViolationType: String, Printable {
     case DocumentationComment       = "Documentation Comment"
     case HeaderComment              = "Header Comment"
     case ObjcIdentifier             = "ObjC identifier"
+    case BlanklineFunction          = "Blankline function"
 
     public var description: String { return rawValue }
 }

@@ -109,4 +109,10 @@ class StringRuleTests: XCTestCase {
             type: .ObjcIdentifier,
             commentDoesntViolate: false)
     }
+
+    func testBlanklineFunction() {
+        verifyRule(BlanklineFunctionRule().example,
+            type: .BlanklineFunction,
+            commentDoesntViolate: false)
+    }
 }
