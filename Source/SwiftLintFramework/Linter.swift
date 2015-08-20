@@ -35,6 +35,7 @@ public struct Linter {
         HeaderCommentRule(),
         ObjcIdentifierRule(),
         BlanklineFunctionRule(),
+        MultilineClosureArgumentRule(),
     ]
 
     public var styleViolations: [StyleViolation] {
