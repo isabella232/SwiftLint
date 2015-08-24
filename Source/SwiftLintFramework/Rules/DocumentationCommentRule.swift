@@ -183,6 +183,7 @@ public struct DocumentationCommentRule: Rule {
     }
 
     private let blackListedRegexes = [
+        "^ABKInAppMessageControllerDelegate$",
         "^CardIOPaymentViewControllerDelegate$",
         "^CLLocationManagerDelegate$",
         "^GMSMapViewDelegate$",
