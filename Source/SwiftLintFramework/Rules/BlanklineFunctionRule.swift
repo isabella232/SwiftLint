@@ -24,7 +24,7 @@ public struct BlanklineFunctionRule: Rule {
         return matches.map { match in
             return StyleViolation(type: .BlanklineFunction,
                 location: Location(file: file, offset: match.range.location),
-                reason: "Files should not have header comments")
+                reason: "There should be a blankline after a type definition before the first function")
         }
     }
 
