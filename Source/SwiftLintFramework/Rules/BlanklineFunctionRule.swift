@@ -13,13 +13,13 @@ public struct BlanklineFunctionRule: Rule {
 
     public let identifier = "blankline_function"
 
-    private static let regex = NSRegularExpression(pattern: "(struct|protocol|class|enum|extension)[^\\{]*\\{\\n[^\\n]*func\\s",
-        options: nil, error: nil)!
+    private static let regex = try! NSRegularExpression(pattern: "(struct|protocol|class|enum|extension)[^\\{]*\\{\\n[^\\n]*func\\s",
+        options: [])
 
-    public func validateFile(var file: File) -> [StyleViolation] {
-        let range = NSRange(location: 0, length: count(file.contents))
+    public func validateFile(file: File) -> [StyleViolation] {
+        let range = NSRange(location: 0, length: file.contents.utf16.count)
         let matches = BlanklineFunctionRule.regex.matchesInString(file.contents,
-            options: nil, range: range) as? [NSTextCheckingResult] ?? []
+            options: [], range: range)
 
         return matches.map { match in
             return StyleViolation(type: .BlanklineFunction,

@@ -16,24 +16,12 @@ public struct TrailingWhitespaceRule: Rule {
     public func validateFile(file: File) -> [StyleViolation] {
         return file.lines.filter {
             $0.content.hasTrailingWhitespace()
-        }.map {
-            StyleViolation(type: .TrailingWhitespace,
-                location: Location(file: file.path, line: $0.index),
-                severity: .Warning,
+            }.map {
+                StyleViolation(type: .TrailingWhitespace,
+                    location: Location(file: file.path, line: $0.index),
+                    severity: .Warning,
+                    reason: "Line #\($0.index) should have no trailing whitespace")
         }
-    }
-
-    private func lastCharacterIsWhitespace(line: Line) -> Bool {
-        if line.content.startIndex == line.content.endIndex {
-            return false
-        }
-
-        let start = advance(line.content.endIndex, -1, line.content.startIndex)
-        let range = Range(start: start, end: line.content.endIndex)
-        let substring = line.content[range].utf16
-
-        let char = substring[substring.startIndex]
-        return NSCharacterSet.whitespaceCharacterSet().characterIsMember(char)
     }
 
     public let example = RuleExample(

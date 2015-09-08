@@ -11,17 +11,16 @@ import XCTest
 
 class StringRuleTests: XCTestCase {
     func testLineLengths() {
-        let longLine = Repeat(count: 100, repeatedValue: "/").joinWithSeparator("") + "\n"
+        let longLine = Repeat(count: 110, repeatedValue: "/").joinWithSeparator("") + "\n"
         XCTAssertEqual(violations(longLine), [])
         let testCases: [(String, Int, ViolationSeverity)] = [
-            ("/", 101, .Warning),
-            (Repeat(count: 101, repeatedValue: "/").joinWithSeparator(""), 201, .Error)
+            ("/", 111, .Warning),
         ]
         for testCase in testCases {
             XCTAssertEqual(violations(testCase.0 + longLine), [StyleViolation(type: .Length,
                 location: Location(file: nil, line: 1),
                 severity: testCase.2,
-                reason: "Line should be 100 characters or less: " +
+                reason: "Line should be 110 characters or less: " +
                 "currently \(testCase.1) characters")])
         }
     }
@@ -69,7 +68,7 @@ class StringRuleTests: XCTestCase {
 
     func testLinesShouldContainReturnArrowWhitespace() {
         verifyRule(ReturnArrowWhitespaceRule(),
-            type: .ReturnArrowWhitespace
+            type: .ReturnArrowWhitespace,
             commentDoesntViolate: false)
     }
 
@@ -90,31 +89,23 @@ class StringRuleTests: XCTestCase {
     }
 
     func testDocumentationComments() {
-        verifyRule(DocumentationCommentRule().example,
-            type: .DocumentationComment,
-            commentDoesntViolate: false)
+        verifyRule(DocumentationCommentRule(), type: .DocumentationComment, commentDoesntViolate: false)
     }
 
     func testHeaderComments() {
-        verifyRule(HeaderCommentRule().example,
-            type: .HeaderComment,
-            commentDoesntViolate: false)
+        verifyRule(HeaderCommentRule(), type: .HeaderComment, commentDoesntViolate: false)
     }
 
     func testObjcIdentifier() {
-        verifyRule(ObjcIdentifierRule().example,
-            type: .ObjcIdentifier,
-            commentDoesntViolate: false)
+        verifyRule(ObjcIdentifierRule(), type: .ObjcIdentifier, commentDoesntViolate: false)
     }
 
     func testBlanklineFunction() {
-        verifyRule(BlanklineFunctionRule().example,
-            type: .BlanklineFunction,
-            commentDoesntViolate: false)
+        verifyRule(BlanklineFunctionRule(), type: .BlanklineFunction, commentDoesntViolate: false)
     }
 
     func testMultilineClosureArgument() {
-        verifyRule(MultilineClosureArgumentRule().example,
+        verifyRule(MultilineClosureArgumentRule(),
             type: .MultilineClosureArgument,
             commentDoesntViolate: false)
     }

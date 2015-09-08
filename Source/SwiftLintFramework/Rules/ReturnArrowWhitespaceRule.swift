@@ -16,9 +16,9 @@ public struct ReturnArrowWhitespaceRule: Rule {
     private static let MatchRegex = try! NSRegularExpression(pattern: "(\\)\\s*->[^\\n|\\s]|\\)->[\\n|\\s]|\\)\\s{2,}->\\s{2,})", options: [])
 
     public func validateFile(file: File) -> [StyleViolation] {
-        let range = NSRange(location: 0, length: count(file.contents))
+        let range = NSRange(location: 0, length: file.contents.utf16.count)
         let matches = ReturnArrowWhitespaceRule.MatchRegex.matchesInString(file.contents,
-            options: nil, range: range) as? [NSTextCheckingResult] ?? []
+            options: [], range: range)
 
         return matches.map { match in
             return StyleViolation(type: .ReturnArrowWhitespace,
