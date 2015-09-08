@@ -13,12 +13,11 @@ public struct HeaderCommentRule: Rule {
 
     public let identifier = "header_comment"
 
-    private static let regex = NSRegularExpression(pattern: "//\\s+Copyright",
+    private static let regex = NSRegularExpression(pattern: "^//\\s*Copyright",
         options: nil, error: nil)!
 
     public func validateFile(var file: File) -> [StyleViolation] {
-        let lines = file.lines
-        for (i, line) in enumerate(file.lines) {
+        for line in file.lines {
             let content = line.content
             if !content.hasPrefix("//") {
                 break
@@ -40,6 +39,9 @@ public struct HeaderCommentRule: Rule {
     public let example = RuleExample(ruleName: "Header Comment",
         ruleDescription: "Files should not have header comments",
         nonTriggeringExamples: [],
-        triggeringExamples: [ "// Copyright" ]
+        triggeringExamples: [
+            "// Copyright",
+            "//\n// Copyright",
+        ]
     )
 }
