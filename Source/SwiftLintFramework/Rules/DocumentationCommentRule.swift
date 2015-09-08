@@ -26,15 +26,18 @@ private func ==(lhs: ProtocolMember, rhs: ProtocolMember) -> Bool {
 public struct DocumentationCommentRule: Rule {
     private let cachePath: String?
 
-    public init(cachePath: String? = nil) {
+    public init(cachePath: String? = ".protocols_cache.json") {
         self.cachePath = cachePath?.absolutePathRepresentation()
     }
 
     private func protocolsToPaths() -> [String: String] {
-        if let cachePath = self.cachePath,
-            let URL = NSURL(fileURLWithPath: cachePath),
-            let data = NSData(contentsOfURL: URL),
-            let json: AnyObject = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil),
+        guard let cachePath = self.cachePath else {
+            return [:]
+        }
+
+        let URL = NSURL(fileURLWithPath: cachePath)
+        if let data = NSData(contentsOfURL: URL),
+            let json: AnyObject = try? NSJSONSerialization.JSONObjectWithData(data, options: []),
             let protocols = json as? [String: String]
         {
             return protocols
@@ -50,31 +53,34 @@ public struct DocumentationCommentRule: Rule {
     }
 
     private func protocolMembersFromInheritedType(type: String, fromPaths paths: [String: String]) -> [ProtocolMember] {
-        if let path = paths[type],
+        guard let path = paths[type],
             let file = File(path: path),
-            let substructure = file.structure.dictionary["key.substructure"] as? XPCArray
+            let substructure = file.structure.dictionary["key.substructure"] as? XPCArray else
         {
-            let structure = self.structuresFromArray(substructure)
-            return self.protocolsFromStructure(structure).flatMap { element in
-                if let substructureArray = element["key.substructure"] as? XPCArray {
-                    let substructure = self.structuresFromArray(substructureArray)
-                    return substructure.flatMap { element in
-                        if let name = element["key.name"] as? String,
-                            let type = element["key.kind"] as? String,
-                            let kind = SwiftDeclarationKind(rawValue: type)
-                        {
-                            return [ProtocolMember(name: name, type: kind)]
-                        }
+            return []
+        }
 
-                        return []
-                    }
+        let structure = self.structuresFromArray(substructure)
+        var members = [ProtocolMember]()
+        for element in self.protocolsFromStructure(structure) {
+            guard let substructureArray = element["key.substructure"] as? XPCArray else {
+                continue
+            }
+
+            let substructure = self.structuresFromArray(substructureArray)
+            members += substructure.flatMap { element in
+                if let name = element["key.name"] as? String,
+                    let type = element["key.kind"] as? String,
+                    let kind = SwiftDeclarationKind(rawValue: type)
+                {
+                    return ProtocolMember(name: name, type: kind)
                 }
 
-                return []
+                return nil
             }
         }
 
-        return []
+        return members
     }
 
     private func structuresFromArray(array: XPCArray) -> [XPCDictionary] {
@@ -94,63 +100,66 @@ public struct DocumentationCommentRule: Rule {
                 let type = SwiftDeclarationKind(rawValue: kind)
                 where type == .Protocol
             {
-                return [element]
+                return element
             }
 
-            return []
+            return nil
         }
     }
 
     public func validateFile(file: File, dictionary: XPCDictionary) -> [StyleViolation] {
-        return (dictionary["key.substructure"] as? XPCArray ?? []).flatMap { element in
-            let element: XPCDictionary! = element as? XPCDictionary
-            if element == nil { return [] }
+        let substructure = dictionary["key.substructure"] as? XPCArray ?? []
+        var violations = [StyleViolation]()
+        for item in substructure {
+            guard let element = item as? XPCDictionary else {
+                continue
+            }
 
             if self.isTopLevelCommentableType(element["key.kind"]) &&
                 (self.scopeNeedsComment(element["key.accessibility"]) ||
                     self.isExtension(element["key.kind"]))
             {
                 let inheritedTypes = element["key.inheritedtypes"] as? XPCArray ?? []
-                let typeNames = compact(inheritedTypes.map { $0 as? XPCDictionary }.map { $0?["key.name"] as? String })
+                let typeNames = inheritedTypes.map { $0 as? XPCDictionary }.map { $0?["key.name"] as? String }.flatMap { $0 }
                 if self.inheritsFromBlacklist(typeNames) {
-                    return []
+                    continue
                 }
 
                 let paths = self.protocolsToPaths()
                 var excluded = [ProtocolMember]()
                 for type in typeNames {
-                    excluded.extend(self.protocolMembersFromInheritedType(type, fromPaths: paths))
+                    excluded.appendContentsOf(self.protocolMembersFromInheritedType(type, fromPaths: paths))
                 }
 
-                var violations = [StyleViolation]()
                 if self.isCommentableType(element["key.kind"]) &&
                     !self.attributesHasComment(element["key.attributes"] as? XPCArray),
                     let offset = element["key.offset"] as? Int64
                 {
                     let location = Location(file: file, offset: Int(offset))
-                    violations = [StyleViolation(type: .DocumentationComment,
+                    violations += [StyleViolation(type: .DocumentationComment,
                         location: location, reason: "Needs documentation comment")]
                 }
 
-                return violations + (element["key.substructure"] as? XPCArray ?? []).flatMap { subElement in
-                    let subElement: XPCDictionary! = subElement as? XPCDictionary
-                    if subElement == nil { return [] }
+                let elements = element["key.substructure"] as? XPCArray ?? []
+                for subElement in elements {
+                    guard let subElement = subElement as? XPCDictionary else {
+                        continue
+                    }
 
                     if self.scopeNeedsComment(subElement["key.accessibility"]) &&
                         self.shouldComment(subElement, excluded: excluded),
                         let offset = subElement["key.offset"] as? Int64
                     {
                         let location = Location(file: file, offset: Int(offset))
-                        return [StyleViolation(type: .DocumentationComment,
+                        violations += [StyleViolation(type: .DocumentationComment,
                             location: location, reason: "Needs documentation comment")]
                     }
-
-                    return []
                 }
-            }
 
-            return []
+            }
         }
+
+        return violations
     }
 
     private func shouldComment(element: XPCDictionary, excluded: [ProtocolMember]) -> Bool {
@@ -194,10 +203,10 @@ public struct DocumentationCommentRule: Rule {
 
     private func inheritsFromBlacklist(inheritedTypes: [String]) -> Bool {
         for regexString in blackListedRegexes {
-            let regex = NSRegularExpression(pattern: regexString, options: nil, error: nil)
+            let regex = try! NSRegularExpression(pattern: regexString, options: [])
             for type in inheritedTypes {
-                let range = NSRange(location: 0, length: count(type))
-                if regex?.firstMatchInString(type, options: nil, range: range) != nil {
+                let range = NSRange(location: 0, length: type.utf16.count)
+                if regex.firstMatchInString(type, options: [], range: range) != nil {
                     return true
                 }
             }

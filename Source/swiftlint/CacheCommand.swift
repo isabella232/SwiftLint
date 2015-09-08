@@ -8,7 +8,7 @@
 
 import Commandant
 import Foundation
-import LlamaKit
+import Result
 import SourceKittenFramework
 import SwiftLintFramework
 import SwiftXPC
@@ -18,48 +18,28 @@ struct CacheCommand: CommandType {
     let function = "Cache protocols and their paths"
 
     func run(mode: CommandMode) -> Result<(), CommandantError<()>> {
-        return CacheOptions.evaluate(mode).flatMap { options in
-            for directory in options.directories {
-                var isDirectory: ObjCBool = false
-                let exists = fileManager.fileExistsAtPath(directory, isDirectory: &isDirectory)
-                if !exists || !isDirectory {
-                    println("Directory doesn't exist at '\(directory)'")
-                    return failure(CommandantError<()>.CommandError(Box()))
-                }
-            }
-
-            for path in options.paths {
-                if !fileManager.fileExistsAtPath(path) {
-                    println("File/Directory doesn't exist at '\(path)'")
-                    return failure(CommandantError<()>.CommandError(Box()))
-                }
-            }
-
-            if let URL = NSURL(fileURLWithPath: options.cachePath) {
-                self.cache(URL, directories: options.directories, paths: options.paths)
-                return success()
-            }
-
-            println("Missing --cachePath argument")
-            return failure(CommandantError<()>.CommandError(Box()))
+        let configuration = Configuration(optional: false)
+        if configuration.included.count <= 0 {
+            fputs("Caching requires configuration\n", stderr)
+            return .Failure(CommandantError<()>.CommandError(()))
         }
+
+        let URL = NSURL(fileURLWithPath: (".protocols_cache.json" as NSString).absolutePathRepresentation())
+        let paths = configuration.included.flatMap(filesToLintAtPath)
+        self.cache(URL, paths: paths)
+        return .Success()
     }
 
-    private func cache(cacheURL: NSURL, directories: [String], paths: [String]) {
-        let absoluteDirectories = directories.map { $0.absolutePathRepresentation() }
-        var filesToLint = paths.flatMap(filesToLintAtPath)
+    private func cache(cacheURL: NSURL, paths: [String]) {
         var pathForProtocol = [String: String]()
-
         if let data = NSData(contentsOfURL: cacheURL),
-            let json: AnyObject = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil),
+            let json: AnyObject = try? NSJSONSerialization.JSONObjectWithData(data, options: []),
             let protocols = json as? [String: String]
         {
             pathForProtocol = protocols
-        } else {
-            filesToLint += directories.flatMap(filesToLintAtPath)
         }
 
-        let files = filesToLint.map { File(path: $0) }.filter { $0 != nil }.map { $0! }
+        let files = paths.flatMap { File(path: $0) }
         for file in files {
             let protocols = self.protocolsFromFile(file)
             for (k, v) in protocols {
@@ -68,8 +48,8 @@ struct CacheCommand: CommandType {
         }
 
         let dictionary = pathForProtocol as NSDictionary
-        let JSON = NSJSONSerialization.dataWithJSONObject(dictionary, options: nil, error: nil)
-        let worked = JSON?.writeToURL(cacheURL, atomically: true)
+        let JSON = try? NSJSONSerialization.dataWithJSONObject(dictionary, options: [])
+        JSON?.writeToURL(cacheURL, atomically: true)
     }
 
     private func protocolsFromFile(file: File) -> [String: String] {
@@ -116,24 +96,6 @@ private func filesToLintAtPath(path: String) -> [String] {
             return [absolutePath]
         }
     }
+
     return []
-}
-
-private struct CacheOptions: OptionsType {
-    let cachePath: String
-    let directories: [String]
-    let paths: [String]
-
-    static func create(cachePath: String)(directory: String)(path: String) -> CacheOptions {
-        let paths = split(path) { $0 == "," }
-        let directories = split(directory) { $0 == "," }
-        return CacheOptions(cachePath: cachePath, directories: directories, paths: paths)
-    }
-
-    private static func evaluate(m: CommandMode) -> Result<CacheOptions, CommandantError<()>> {
-        return create
-            <*> m <| Option(key: "cachePath", defaultValue: "", usage: "the path to output the cache file")
-            <*> m <| Option(key: "directories", defaultValue: "", usage: "the directories to build the cache from separated by commas")
-            <*> m <| Option(key: "paths", defaultValue: "", usage: "the path to changed files separated by commas")
-    }
 }

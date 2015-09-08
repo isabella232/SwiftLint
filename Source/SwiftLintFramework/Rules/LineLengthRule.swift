@@ -28,7 +28,7 @@ public struct LineLengthRule: ParameterizedRule {
         description: "Enforce maximum line length"
     )
 
-    public func validateFile(var file: File) -> [StyleViolation] {
+    public func validateFile(file: File) -> [StyleViolation] {
         return file.lines.flatMap { line in
             for param in parameters.reverse() where line.content.characters.count > param.value {
                 return StyleViolation(ruleDescription: self.dynamicType.description,

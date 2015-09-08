@@ -21,12 +21,8 @@ struct LintCommand: CommandType {
 
     func run(mode: CommandMode) -> Result<(), CommandantError<()>> {
         return LintOptions.evaluate(mode).flatMap { options in
-<<<<<<< 9a37746882b92b505939c922bdbf1c1b5a13eb85
             let configuration = Configuration(path: options.configurationFile,
                 optional: !Process.arguments.contains("--config"))
-=======
-            Linter.cachePath = options.cachePath
->>>>>>> Pass cachePath to linter
             if options.useSTDIN {
                 let standardInput = NSFileHandle.fileHandleWithStandardInput()
                 let stdinData = standardInput.readDataToEndOfFile()
@@ -107,7 +103,6 @@ struct LintCommand: CommandType {
         }
         return .Failure(CommandantError<()>.CommandError())
     }
-}
 
     private func filesToLintAtPath(path: String) -> [String] {
         let absolutePath = (path.absolutePathRepresentation() as NSString).stringByStandardizingPath
@@ -123,6 +118,8 @@ struct LintCommand: CommandType {
         } else if absolutePath.isSwiftFile() {
             return [absolutePath]
         }
+
+        return []
     }
 
     private func scriptInputFiles() -> Result<[String], CommandantError<()>> {
@@ -164,7 +161,7 @@ struct LintCommand: CommandType {
 }
 
 struct LintOptions: OptionsType {
-    let paths: [String]
+    let path: String
     let useSTDIN: Bool
     let configurationFile: String
     let strict: Bool

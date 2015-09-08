@@ -13,13 +13,13 @@ public struct MultilineClosureArgumentRule: Rule {
 
     public let identifier = "closure_argument"
 
-    private static let regex = NSRegularExpression(pattern: "(^[^\\{\\n]*\\$0|\\$0[^\\}\\n]*$)",
-        options: .AnchorsMatchLines, error: nil)!
+    private static let regex = try! NSRegularExpression(pattern: "(^[^\\{\\n]*\\$0|\\$0[^\\}\\n]*$)",
+        options: .AnchorsMatchLines)
 
-    public func validateFile(var file: File) -> [StyleViolation] {
-        let range = NSRange(location: 0, length: count(file.contents))
+    public func validateFile(file: File) -> [StyleViolation] {
+        let range = NSRange(location: 0, length: file.contents.utf16.count)
         let matches = MultilineClosureArgumentRule.regex.matchesInString(file.contents,
-            options: nil, range: range) as? [NSTextCheckingResult] ?? []
+            options: [], range: range)
 
         return matches.map { match in
             return StyleViolation(type: .MultilineClosureArgument,

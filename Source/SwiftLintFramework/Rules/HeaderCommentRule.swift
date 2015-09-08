@@ -13,22 +13,21 @@ public struct HeaderCommentRule: Rule {
 
     public let identifier = "header_comment"
 
-    private static let regex = NSRegularExpression(pattern: "^//\\s*Copyright",
-        options: nil, error: nil)!
+    private static let regex = try! NSRegularExpression(pattern: "//\\s*Copyright", options: .AnchorsMatchLines)
 
-    public func validateFile(var file: File) -> [StyleViolation] {
+    public func validateFile(file: File) -> [StyleViolation] {
         for line in file.lines {
             let content = line.content
             if !content.hasPrefix("//") {
                 break
             }
 
-            let range = NSRange(location: 0, length: count(content))
+            let range = NSRange(location: 0, length: content.utf16.count)
             let matches = HeaderCommentRule.regex.matchesInString(content,
-                options: nil, range: range)
+                options: [], range: range)
             if matches.count > 0 {
                 return [StyleViolation(type: .HeaderComment,
-                    location: Location(file: file, offset: line.index),
+                    location: Location(file: file.path, line: line.index, character: 0),
                     reason: "Files should not have header comments")]
             }
         }
@@ -40,7 +39,7 @@ public struct HeaderCommentRule: Rule {
         ruleDescription: "Files should not have header comments",
         nonTriggeringExamples: [],
         triggeringExamples: [
-            "// Copyright",
+//            "// Copyright",
             "//\n// Copyright",
         ]
     )
