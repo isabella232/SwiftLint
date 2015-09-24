@@ -15,7 +15,7 @@ public struct ControlStatementRule: Rule {
 
     public func validateFile(file: File) -> [StyleViolation] {
         return ["if", "for", "switch", "while"].flatMap { statementKind -> [StyleViolation] in
-            let pattern = "\(statementKind)\\s*\\([^,&|]*\\)\\s*\\{"
+            let pattern = "\(statementKind)\\s*\\([^,&|)]*\\)\\s*\\{"
             return file.matchPattern(pattern).flatMap { match, syntaxKinds in
                 if syntaxKinds.first != .Keyword {
                     return nil
