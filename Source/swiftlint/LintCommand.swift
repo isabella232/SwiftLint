@@ -115,10 +115,7 @@ struct LintCommand: CommandType {
             } else if absolutePath.isSwiftFile() {
                 return [absolutePath]
             }
-        } else if absolutePath.isSwiftFile() {
-            return [absolutePath]
         }
-
         return []
     }
 
