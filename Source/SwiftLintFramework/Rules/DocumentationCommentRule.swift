@@ -26,8 +26,13 @@ private func ==(lhs: ProtocolMember, rhs: ProtocolMember) -> Bool {
 public struct DocumentationCommentRule: Rule {
     private let cachePath: String?
 
-    public init(cachePath: String? = ".protocols_cache.json") {
-        self.cachePath = cachePath?.absolutePathRepresentation()
+    public init(cachePath: String?) {
+        let path = cachePath ?? ".protocols_cache.json"
+        self.cachePath = path.absolutePathRepresentation()
+    }
+
+    public init() {
+        self.init(cachePath: nil)
     }
 
     private func protocolsToPaths() -> [String: String] {
