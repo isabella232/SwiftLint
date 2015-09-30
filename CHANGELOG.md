@@ -1,4 +1,4 @@
-## Master
+## 0.2.0: Tumble Dry
 
 ##### Breaking
 
@@ -14,10 +14,14 @@
 ##### Enhancements
 
 * Configure SwiftLint via a YAML file:
-  Supports `disabled_rules`, `included` and `excluded`.
+  Supports `disabled_rules`, `included`, `excluded` and passing parameters to
+  parameterized rules.
   Pass a configuration file path to `--config`, defaults to `.swiftlint.yml`.  
   [JP Simard](https://github.com/jpsim)
+  [#1](https://github.com/realm/SwiftLint/issues/1)
   [#3](https://github.com/realm/SwiftLint/issues/3)
+  [#20](https://github.com/realm/SwiftLint/issues/20)
+  [#26](https://github.com/realm/SwiftLint/issues/26)
 
 * Updated `TypeNameRule` and `VariableNameRule` to allow private type & variable
   names to start with an underscore.
@@ -34,6 +38,12 @@
 
 * Violations are now printed to stderr.  
   [Keith Smiley](https://github.com/keith)
+
+* Custom reporters are now supported. Specify a value for the `reporter:` key in
+  your configuration file. Available reporters are `xcode` (default), `json`,
+  `csv`.  
+  [JP Simard](https://github.com/jpsim)
+  [#42](https://github.com/realm/SwiftLint/issues/42)
 
 ##### Bug Fixes
 

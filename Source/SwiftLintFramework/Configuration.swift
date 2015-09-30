@@ -12,21 +12,40 @@ extension Yaml {
     var arrayOfStrings: [Swift.String]? {
         return array?.flatMap { $0.string }
     }
+    var arrayOfInts: [Swift.Int]? {
+        return array?.flatMap { $0.int }
+    }
 }
 
 public struct Configuration {
     public let disabledRules: [String] // disabled_rules
     public let included: [String]      // included
     public let excluded: [String]      // excluded
+    public let reporter: String        // reporter (xcode, json, csv)
+    public let rules: [Rule]
 
-    public var rules: [Rule] {
-        return allRules.filter { !disabledRules.contains($0.identifier) }
+    public var reporterFromString: Reporter.Type {
+        switch reporter {
+        case XcodeReporter.identifier:
+            return XcodeReporter.self
+        case JSONReporter.identifier:
+            return JSONReporter.self
+        case CSVReporter.identifier:
+            return CSVReporter.self
+        default:
+            fatalError("no reporter with identifier '\(reporter)' available.")
+        }
     }
 
-    public init?(disabledRules: [String] = [], included: [String] = [], excluded: [String] = []) {
+    public init?(disabledRules: [String] = [],
+                 included: [String] = [],
+                 excluded: [String] = [],
+                 reporter: String = "xcode",
+                 rules: [Rule] = allRules) {
         self.disabledRules = disabledRules
         self.included = included
         self.excluded = excluded
+        self.reporter = reporter
 
         // Validate that all rule identifiers map to a defined rule
 
@@ -58,6 +77,8 @@ public struct Configuration {
             }
             return nil
         }
+
+        self.rules = rules.filter { !disabledRules.contains($0.identifier) }
     }
 
     public init?(yaml: String) {
@@ -67,7 +88,9 @@ public struct Configuration {
         self.init(
             disabledRules: yamlConfig["disabled_rules"].arrayOfStrings ?? [],
             included: yamlConfig["included"].arrayOfStrings ?? [],
-            excluded: yamlConfig["excluded"].arrayOfStrings ?? []
+            excluded: yamlConfig["excluded"].arrayOfStrings ?? [],
+            reporter: yamlConfig["reporter"].string ?? XcodeReporter.identifier,
+            rules: Configuration.rulesFromYAML(yamlConfig)
         )
     }
 
@@ -99,5 +122,46 @@ public struct Configuration {
                 self.init()!
             }
         }
+    }
+
+    public static func rulesFromYAML(yaml: Yaml?) -> [Rule] {
+        var rules = [Rule]()
+        if let params = yaml?[.String(LineLengthRule().identifier)].arrayOfInts {
+            rules.append(LineLengthRule(parameters: ruleParametersFromArray(params)))
+        } else {
+            rules.append(LineLengthRule())
+        }
+        rules.append(LeadingWhitespaceRule())
+        rules.append(TrailingWhitespaceRule())
+        rules.append(ReturnArrowWhitespaceRule())
+        rules.append(TrailingNewlineRule())
+        rules.append(OperatorFunctionWhitespaceRule())
+        rules.append(ForceCastRule())
+        if let params = yaml?[.String(FileLengthRule().identifier)].arrayOfInts {
+            rules.append(FileLengthRule(parameters: ruleParametersFromArray(params)))
+        } else {
+            rules.append(FileLengthRule())
+        }
+        rules.append(TodoRule())
+        rules.append(ColonRule())
+        rules.append(TypeNameRule())
+        rules.append(VariableNameRule())
+        if let params = yaml?[.String(TypeBodyLengthRule().identifier)].arrayOfInts {
+            rules.append(TypeBodyLengthRule(parameters: ruleParametersFromArray(params)))
+        } else {
+            rules.append(TypeBodyLengthRule())
+        }
+        if let params = yaml?[.String(FunctionBodyLengthRule().identifier)].arrayOfInts {
+            rules.append(FunctionBodyLengthRule(parameters: ruleParametersFromArray(params)))
+        } else {
+            rules.append(FunctionBodyLengthRule())
+        }
+        rules.append(NestingRule())
+        rules.append(ControlStatementRule())
+        return rules
+    }
+
+    public static func ruleParametersFromArray<T>(array: [T]) -> [RuleParameter<T>] {
+        return zip([.Warning, .Error], array).map(RuleParameter.init)
     }
 }
