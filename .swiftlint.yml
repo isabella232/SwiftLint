@@ -1,2 +1,4 @@
 included:
   - Source
+disabled_rules:
+  - documentation_comments
