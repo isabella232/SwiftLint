@@ -11,23 +11,17 @@ import XCTest
 
 class StringRuleTests: XCTestCase {
     func testLineLengths() {
-        let longLine = Repeat(count: 110, repeatedValue: "/").joinWithSeparator("") + "\n"
+        let longLine = Repeat(count: 100, repeatedValue: "/").joinWithSeparator("") + "\n"
         XCTAssertEqual(violations(longLine), [])
         let testCases: [(String, Int, ViolationSeverity)] = [
-            ("/", 111, .Warning),
+            ("/", 101, .Warning),
+            (Repeat(count: 101, repeatedValue: "/").joinWithSeparator(""), 201, .Error)
         ]
         for testCase in testCases {
             XCTAssertEqual(violations(testCase.0 + longLine), [StyleViolation(
                 ruleDescription: LineLengthRule.description,
                 severity: testCase.2,
-<<<<<<< HEAD
-                location: Location(file: nil, line: 1),
-                reason: "Line should be 100 characters or less: currently \(testCase.1) " +
-                "characters")])
-=======
-                reason: "Line should be 110 characters or less: " +
                 "currently \(testCase.1) characters")])
->>>>>>> Swift 2.0 updates
         }
     }
 
