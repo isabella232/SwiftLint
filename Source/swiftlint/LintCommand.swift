@@ -70,6 +70,7 @@ struct LintCommand: CommandType {
             print(
                 "Done linting!" +
                 " Found \(numberOfViolations) violation\(violationSuffix)," +
+                " \(numberOfSeriousViolations) serious" +
                 " in \(filesToLint.count) file\(filesSuffix)"
             )
             if strict && numberOfViolations > 0 {
@@ -94,10 +95,7 @@ struct LintCommand: CommandType {
             } else if absolutePath.isSwiftFile() {
                 return [absolutePath]
             }
-        } else if absolutePath.isSwiftFile() {
-            return [absolutePath]
         }
-
         return []
     }
 }
@@ -110,7 +108,8 @@ struct LintOptions: OptionsType {
 
     static func create(path: String)(useSTDIN: Bool)(configurationFile: String)(strict: Bool)
         -> LintOptions {
-        return LintOptions(path: path, useSTDIN: useSTDIN, configurationFile: configurationFile, strict: strict)
+        return LintOptions(path: path, useSTDIN: useSTDIN, configurationFile: configurationFile,
+            strict: strict)
     }
 
     static func evaluate(m: CommandMode) -> Result<LintOptions, CommandantError<()>> {
