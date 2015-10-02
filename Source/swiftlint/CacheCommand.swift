@@ -18,16 +18,22 @@ struct CacheCommand: CommandType {
     let function = "Cache protocols and their paths"
 
     func run(mode: CommandMode) -> Result<(), CommandantError<()>> {
-        let configuration = Configuration(optional: false)
-        if configuration.included.count <= 0 {
-            fputs("Caching requires configuration\n", stderr)
-            return .Failure(CommandantError<()>.CommandError(()))
-        }
+        return CacheOptions.evaluate(mode).flatMap { options in
+            let configuration = Configuration(optional: false)
+            var paths = [String]()
+            if !options.directories.isEmpty {
+                paths = options.directories.flatMap(filesToLintAtPath)
+            } else if configuration.included.count > 0 {
+                paths = configuration.included.flatMap(filesToLintAtPath)
+            } else {
+                fputs("Caching requires command line arguments or included directories\n", stderr)
+                return .Failure(CommandantError<()>.CommandError(()))
+            }
 
-        let URL = NSURL(fileURLWithPath: (".protocols_cache.json" as NSString).absolutePathRepresentation())
-        let paths = configuration.included.flatMap(filesToLintAtPath)
-        self.cache(URL, paths: paths)
-        return .Success()
+            let URL = NSURL(fileURLWithPath: (".protocols_cache.json" as NSString).absolutePathRepresentation())
+            self.cache(URL, paths: paths)
+            return .Success()
+        }
     }
 
     private func cache(cacheURL: NSURL, paths: [String]) {
@@ -98,4 +104,18 @@ private func filesToLintAtPath(path: String) -> [String] {
     }
 
     return []
+}
+
+private struct CacheOptions: OptionsType {
+    let directories: [String]
+
+    static func create(directories: String) -> CacheOptions {
+        let directories = directories.characters.split { $0 == "," }.map(String.init)
+        return CacheOptions(directories: directories)
+    }
+
+    private static func evaluate(m: CommandMode) -> Result<CacheOptions, CommandantError<()>> {
+        return create
+            <*> m <| Option(key: "directories", defaultValue: "", usage: "the directories to build the cache from separated by commas")
+    }
 }
