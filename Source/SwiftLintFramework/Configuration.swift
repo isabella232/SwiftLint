@@ -137,6 +137,7 @@ public struct Configuration {
         rules.append(TrailingNewlineRule())
         rules.append(OperatorFunctionWhitespaceRule())
         rules.append(ForceCastRule())
+        rules.append(DocumentationCommentRule())
         if let params = yaml?[.String(FileLengthRule().identifier)].arrayOfInts {
             rules.append(FileLengthRule(parameters: ruleParametersFromArray(params)))
         } else {
