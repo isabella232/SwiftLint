@@ -133,11 +133,15 @@ public struct Configuration {
         }
         rules.append(LeadingWhitespaceRule())
         rules.append(TrailingWhitespaceRule())
+        rules.append(HeaderCommentRule())
         rules.append(ReturnArrowWhitespaceRule())
         rules.append(TrailingNewlineRule())
         rules.append(OperatorFunctionWhitespaceRule())
+        rules.append(MultilineClosureArgumentRule())
+        rules.append(BlanklineFunctionRule())
         rules.append(ForceCastRule())
         rules.append(DocumentationCommentRule())
+        rules.append(ObjcIdentifierRule())
         if let params = yaml?[.String(FileLengthRule().identifier)].arrayOfInts {
             rules.append(FileLengthRule(parameters: ruleParametersFromArray(params)))
         } else {
