@@ -51,6 +51,10 @@ public struct VariableNameRule: ASTRule {
         var violations = [StyleViolation]()
         if let name = dictionary["key.name"] as? String,
             let offset = (dictionary["key.offset"] as? Int64).flatMap({ Int($0) }) {
+            if name.characters.first == "$" {
+                // skip block variables
+                return violations
+            }
             let location = Location(file: file, offset: offset)
             let name = name.nameStrippingLeadingUnderscoreIfPrivate(dictionary)
             let nameCharacterSet = NSCharacterSet(charactersInString: name)
@@ -79,7 +83,8 @@ public struct VariableNameRule: ASTRule {
         nonTriggeringExamples: [
             "let myLet = 0",
             "var myVar = 0",
-            "private let _myLet = 0"
+            "private let _myLet = 0",
+            "foo.map { $0.bar }",
         ],
         triggeringExamples: [
             "let MyLet = 0",
