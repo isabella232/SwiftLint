@@ -65,7 +65,7 @@ public struct VariableNameRule: ASTRule {
                     location: location,
                     severity: .Error,
                     reason: "Variable name should only contain alphanumeric characters: '\(name)'"))
-            } else if name.characters.count < 2 || name.characters.count > 60 {
+            } else if name.characters.count > 60 {
                 violations.append(StyleViolation(type: .NameFormat,
                     location: location,
                     severity: .Warning,
