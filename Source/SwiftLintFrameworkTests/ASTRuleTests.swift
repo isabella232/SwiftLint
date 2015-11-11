@@ -26,12 +26,12 @@ class ASTRuleTests: XCTestCase {
                 location: Location(file: nil, line: 1, character: 1),
                 reason: "Type name should start with an uppercase character: 'abc'")])
 
-            XCTAssertEqual(violations("\(kind) Ab {}\n"), [StyleViolation(
+            XCTAssertEqual(violations("\(kind) A {}\n"), [StyleViolation(
                 ruleDescription: TypeNameRule.description,
                 location: Location(file: nil, line: 1, character: 1),
-                reason: "Type name should be between 3 and 40 characters in length: 'Ab'")])
+                reason: "Type name should be between 3 and 40 characters in length: 'A'")])
 
-            let longName = Repeat(count: 40, repeatedValue: "A").joinWithSeparator("")
+            let longName = Repeat(count: 60, repeatedValue: "A").joinWithSeparator("")
             XCTAssertEqual(violations("\(kind) \(longName) {}\n"), [])
             let longerName = longName + "A"
             XCTAssertEqual(violations("\(kind) \(longerName) {}\n"), [

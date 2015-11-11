@@ -11,10 +11,8 @@ import SourceKittenFramework
 public struct BlanklineFunctionRule: Rule {
     public init() {}
 
-    public let identifier = "blankline_function"
-
-    private static let regex = try! NSRegularExpression(pattern: "(struct|protocol|class|enum|extension)[^\\{]*\\{\\n[^\\n]*func\\s",
-        options: [])
+    private static let regex = try! NSRegularExpression(pattern:
+        "(struct|protocol|class|enum|extension)[^\\{]*\\{\\n[^\\n]*func\\s", options: [])
 
     public func validateFile(file: File) -> [StyleViolation] {
         let range = NSRange(location: 0, length: file.contents.utf16.count)
@@ -22,14 +20,15 @@ public struct BlanklineFunctionRule: Rule {
             options: [], range: range)
 
         return matches.map { match in
-            return StyleViolation(type: .BlanklineFunction,
+            return StyleViolation(ruleDescription: self.dynamicType.description,
                 location: Location(file: file, offset: match.range.location),
                 reason: "There should be a blankline after a type definition before the first function")
         }
     }
 
-    public let example = RuleExample(ruleName: "Blankline function",
-        ruleDescription: "There should be a blankline after a type definition before the first function",
+    public static let description = RuleDescription(identifier: "blankline_function",
+        name: "Blankline before function",
+        description: "There should be a blankline after a type definition before the first function",
         nonTriggeringExamples: [
             "class Foo {\n\nfunc bar() {}}",
             "class Foo {\nvar foo: String?}",

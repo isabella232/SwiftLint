@@ -1,3 +1,4 @@
+
 //
 //  LineLengthRule.swift
 //  SwiftLint
@@ -37,6 +38,7 @@ public struct LineLengthRule: ParameterizedRule {
                     reason: "Line should be \(parameters.first!.value) characters or less: " +
                     "currently \(line.content.characters.count) characters")
             }
+            return nil
         }
     }
 }

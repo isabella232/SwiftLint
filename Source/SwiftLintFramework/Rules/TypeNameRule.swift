@@ -25,7 +25,7 @@ public struct TypeNameRule: ASTRule {
             "struct myStruct {}",
             "struct _MyStruct {}",
             "private struct MyStruct_ {}",
-            "struct My {}"
+            "struct M {}"
         ]
     )
 

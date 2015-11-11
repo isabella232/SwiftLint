@@ -185,7 +185,7 @@ struct LintOptions: OptionsType {
             <*> mode <| Option(key: "strict",
                 defaultValue: false,
                 usage: "fail on warnings")
-            <*> m <| Option(key: "cachePath",
+            <*> mode <| Option(key: "cachePath",
                 defaultValue: "",
                 usage: "path for protocol cache")
             <*> mode <| Option(key: "use-script-input-files",

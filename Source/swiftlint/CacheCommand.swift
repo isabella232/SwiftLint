@@ -30,7 +30,8 @@ struct CacheCommand: CommandType {
                 return .Failure(CommandantError<()>.CommandError(()))
             }
 
-            let URL = NSURL(fileURLWithPath: (".protocols_cache.json" as NSString).absolutePathRepresentation())
+            let URL = NSURL(fileURLWithPath: (".protocols_cache.json" as NSString)
+                .absolutePathRepresentation())
             self.cache(URL, paths: paths)
             return .Success()
         }
@@ -40,8 +41,7 @@ struct CacheCommand: CommandType {
         var pathForProtocol = [String: String]()
         if let data = NSData(contentsOfURL: cacheURL),
             let json: AnyObject = try? NSJSONSerialization.JSONObjectWithData(data, options: []),
-            let protocols = json as? [String: String]
-        {
+            let protocols = json as? [String: String] {
             pathForProtocol = protocols
         }
 
@@ -82,7 +82,8 @@ struct CacheCommand: CommandType {
     }
 
     private func isProtocol(attributes: XPCDictionary) -> Bool {
-        if let kind = attributes["key.kind"] as? String, type = SwiftDeclarationKind(rawValue: kind) {
+        if let kind = attributes["key.kind"] as? String,
+            let type = SwiftDeclarationKind(rawValue: kind) {
             return type == .Protocol
         }
 
@@ -114,8 +115,11 @@ private struct CacheOptions: OptionsType {
         return CacheOptions(directories: directories)
     }
 
-    private static func evaluate(m: CommandMode) -> Result<CacheOptions, CommandantError<()>> {
+    private static func evaluate(mode: CommandMode) -> Result<CacheOptions,
+        CommandantError<()>> {
         return create
-            <*> m <| Option(key: "directories", defaultValue: "", usage: "the directories to build the cache from separated by commas")
+            <*> mode <| Option(key: "directories",
+                defaultValue: "",
+                usage: "the directories to build the cache from separated by commas")
     }
 }
