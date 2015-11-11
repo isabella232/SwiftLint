@@ -11,8 +11,6 @@ import SourceKittenFramework
 public struct MultilineClosureArgumentRule: Rule {
     public init() {}
 
-    public let identifier = "closure_argument"
-
     private static let regex = try! NSRegularExpression(pattern: "(^[^\\{\\n]*\\$0|\\$0[^\\}\\n]*$)",
         options: .AnchorsMatchLines)
 
@@ -22,14 +20,16 @@ public struct MultilineClosureArgumentRule: Rule {
             options: [], range: range)
 
         return matches.map { match in
-            return StyleViolation(type: .MultilineClosureArgument,
+            return StyleViolation(ruleDescription: self.dynamicType.description,
                 location: Location(file: file, offset: match.range.location),
                 reason: "Multi-line closures should not use $0")
         }
     }
 
-    public let example = RuleExample(ruleName: "Multi-line closure argument",
-        ruleDescription: "Multi-line closures should not use $0",
+    public static let description = RuleDescription(
+        identifier: "closure_argument",
+        name: "Multi-line closure argument",
+        description: "Multi-line closures should not use $0",
         nonTriggeringExamples: [
             "foo.map { $0.toString() }\n",
             "foo.map { $0.something($1) }\n",

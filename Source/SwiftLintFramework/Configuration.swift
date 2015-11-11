@@ -143,7 +143,12 @@ public struct Configuration {
             ControlStatementRule(),
             OpeningBraceRule(),
             CommaRule(),
-            StatementPositionRule()
+            StatementPositionRule(),
+            DocumentationCommentRule(),
+            ObjcIdentifierRule(),
+            HeaderCommentRule(),
+            BlanklineFunctionRule(),
+            MultilineClosureArgumentRule(),
         ] + parameterRulesFromYAML(yaml)
     }
 

@@ -11,8 +11,6 @@ import SourceKittenFramework
 public struct ObjcIdentifierRule: Rule {
     public init() {}
 
-    public let identifier = "objc_identifier"
-
     private static let regex = try! NSRegularExpression(pattern: "(^[^\\s]+\\s+@objc|@objc[^\\n_])", options: [])
 
     public func validateFile(file: File) -> [StyleViolation] {
@@ -20,15 +18,17 @@ public struct ObjcIdentifierRule: Rule {
         let matches = ObjcIdentifierRule.regex.matchesInString(file.contents, options: [], range: range)
 
         return matches.map { match in
-            return StyleViolation(type: .ObjcIdentifier,
-                location: Location(file: file, offset: match.range.location),
+            return StyleViolation(ruleDescription: self.dynamicType.description,
                 severity: .Warning,
+                location: Location(file: file, offset: match.range.location),
                 reason: "@objc should be on its own line")
         }
     }
 
-    public let example = RuleExample(ruleName: "ObjC Identifier",
-        ruleDescription: "@objc should be on its own line",
+    public static let description = RuleDescription(
+        identifier: "objc_identifier",
+        name: "ObjC Identifier",
+        description: "@objc should be on its own line",
         nonTriggeringExamples: [
             "    @objc\n",
             "let foo: @objc_block () -> Void = {",

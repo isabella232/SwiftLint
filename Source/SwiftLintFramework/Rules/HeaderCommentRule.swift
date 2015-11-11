@@ -11,7 +11,14 @@ import SourceKittenFramework
 public struct HeaderCommentRule: Rule {
     public init() {}
 
-    public let identifier = "header_comment"
+    public static let description = RuleDescription(
+        identifier: "header_comment",
+        name: "Header Comment",
+        description: "Files should not have header comments",
+        triggeringExamples: [
+            "//\n// Copyright",
+        ]
+    )
 
     private static let regex = try! NSRegularExpression(pattern: "//\\s*Copyright", options: .AnchorsMatchLines)
 
@@ -26,7 +33,7 @@ public struct HeaderCommentRule: Rule {
             let matches = HeaderCommentRule.regex.matchesInString(content,
                 options: [], range: range)
             if matches.count > 0 {
-                return [StyleViolation(type: .HeaderComment,
+                return [StyleViolation(ruleDescription: self.dynamicType.description,
                     location: Location(file: file.path, line: line.index, character: 0),
                     reason: "Files should not have header comments")]
             }
@@ -34,13 +41,4 @@ public struct HeaderCommentRule: Rule {
 
         return []
     }
-
-    public let example = RuleExample(ruleName: "Header Comment",
-        ruleDescription: "Files should not have header comments",
-        nonTriggeringExamples: [],
-        triggeringExamples: [
-//            "// Copyright",
-            "//\n// Copyright",
-        ]
-    )
 }
