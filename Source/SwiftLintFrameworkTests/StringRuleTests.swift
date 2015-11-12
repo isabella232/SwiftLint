@@ -96,26 +96,24 @@ class StringRuleTests: XCTestCase {
     func testStatementPosition() {
         verifyRule(StatementPositionRule.description)
     }
-}
 
-//    func testDocumentationComments() {
-//        verifyRule(DocumentationCommentRule(), type: .DocumentationComment, commentDoesntViolate: false)
-//    }
-//
-//    func testHeaderComments() {
-//        verifyRule(HeaderCommentRule(), type: .HeaderComment, commentDoesntViolate: false)
-//    }
-//
-//    func testObjcIdentifier() {
-//        verifyRule(ObjcIdentifierRule(), type: .ObjcIdentifier, commentDoesntViolate: false)
-//    }
-//
-//    func testBlanklineFunction() {
-//        verifyRule(BlanklineFunctionRule(), type: .BlanklineFunction, commentDoesntViolate: false)
-//    }
-//
-//    func testMultilineClosureArgument() {
-//        verifyRule(MultilineClosureArgumentRule(),
-//            type: .MultilineClosureArgument,
-//            commentDoesntViolate: false)
-//    }
+    func testDocumentationComments() {
+        verifyRule(DocumentationCommentRule.description, commentDoesntViolate: false)
+    }
+
+    func testHeaderComments() {
+        verifyRule(HeaderCommentRule.description, commentDoesntViolate: false)
+    }
+
+    func testObjcIdentifier() {
+        verifyRule(ObjcIdentifierRule.description, commentDoesntViolate: false)
+    }
+
+    func testBlanklineFunction() {
+        verifyRule(BlanklineFunctionRule.description, commentDoesntViolate: false)
+    }
+
+    func testMultilineClosureArgument() {
+        verifyRule(MultilineClosureArgumentRule.description, commentDoesntViolate: false)
+    }
+}

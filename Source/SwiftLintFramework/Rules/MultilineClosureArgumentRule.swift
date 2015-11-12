@@ -11,8 +11,8 @@ import SourceKittenFramework
 public struct MultilineClosureArgumentRule: Rule {
     public init() {}
 
-    private static let regex = try! NSRegularExpression(pattern: "(^[^\\{\\n]*\\$0|\\$0[^\\}\\n]*$)",
-        options: .AnchorsMatchLines)
+    private static let regex = try! NSRegularExpression(pattern:
+        "(^[^\\{\\n]*\\$0|\\$0[^\\}\\n]*$)", options: .AnchorsMatchLines)
 
     public func validateFile(file: File) -> [StyleViolation] {
         let range = NSRange(location: 0, length: file.contents.utf16.count)

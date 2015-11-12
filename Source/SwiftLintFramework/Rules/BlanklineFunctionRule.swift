@@ -22,13 +22,15 @@ public struct BlanklineFunctionRule: Rule {
         return matches.map { match in
             return StyleViolation(ruleDescription: self.dynamicType.description,
                 location: Location(file: file, offset: match.range.location),
-                reason: "There should be a blankline after a type definition before the first function")
+                reason: "There should be a blankline after a type definition before the " +
+                "first function")
         }
     }
 
     public static let description = RuleDescription(identifier: "blankline_function",
         name: "Blankline before function",
-        description: "There should be a blankline after a type definition before the first function",
+        description: "There should be a blankline after a type definition before the " +
+        "first function",
         nonTriggeringExamples: [
             "class Foo {\n\nfunc bar() {}}",
             "class Foo {\nvar foo: String?}",

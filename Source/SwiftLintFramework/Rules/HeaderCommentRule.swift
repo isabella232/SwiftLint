@@ -20,7 +20,8 @@ public struct HeaderCommentRule: Rule {
         ]
     )
 
-    private static let regex = try! NSRegularExpression(pattern: "//\\s*Copyright", options: .AnchorsMatchLines)
+    private static let regex = try! NSRegularExpression(pattern: "//\\s*Copyright",
+        options: .AnchorsMatchLines)
 
     public func validateFile(file: File) -> [StyleViolation] {
         for line in file.lines {

@@ -1,4 +1,3 @@
-
 //
 //  LineLengthRule.swift
 //  SwiftLint

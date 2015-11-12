@@ -19,7 +19,7 @@ private struct ProtocolMember: Equatable {
     let type: SwiftDeclarationKind
 }
 
-private func ==(lhs: ProtocolMember, rhs: ProtocolMember) -> Bool {
+private func == (lhs: ProtocolMember, rhs: ProtocolMember) -> Bool {
     return lhs.type == rhs.type && lhs.name == rhs.name
 }
 
