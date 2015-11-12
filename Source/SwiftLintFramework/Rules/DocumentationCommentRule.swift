@@ -118,12 +118,16 @@ public struct DocumentationCommentRule: Rule {
                 continue
             }
 
+            let isExtension = self.isExtension(element["key.kind"])
             if self.isTopLevelCommentableType(element["key.kind"]) &&
-                (self.scopeNeedsComment(element["key.accessibility"]) ||
-                    self.isExtension(element["key.kind"]))
+                (isExtension || self.scopeNeedsComment(element["key.accessibility"]))
             {
                 let inheritedTypes = element["key.inheritedtypes"] as? XPCArray ?? []
-                let typeNames = inheritedTypes.map { $0 as? XPCDictionary }.map { $0?["key.name"] as? String }.flatMap { $0 }
+                let currentTypeIfExtension: XPCArray = isExtension ? [element] : []
+                let typeNames = (inheritedTypes + currentTypeIfExtension)
+                    .map { $0 as? XPCDictionary }
+                    .map { $0?["key.name"] as? String }
+                    .flatMap { $0 }
                 if self.inheritsFromBlacklist(typeNames) {
                     continue
                 }
@@ -224,11 +228,7 @@ public struct DocumentationCommentRule: Rule {
             let kind = SwiftDeclarationKind(rawValue: type)
         {
             let memberType = ProtocolMember(name: name, type: kind)
-            for excluded in excludedMembers {
-                if excluded == memberType {
-                    return true
-                }
-            }
+            return excludedMembers.contains(memberType)
         }
 
         return false
@@ -357,6 +357,7 @@ public struct DocumentationCommentRule: Rule {
             "class Bar { class var Foo: String }\n",
             "struct Bar {\nstatic var foo: String\n}\n",
             "func == () {}\n",
+            "//\nprotocol Foo {\n\n func bar() }",
         ]
     )
 }
