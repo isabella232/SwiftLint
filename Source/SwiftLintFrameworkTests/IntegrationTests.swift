@@ -18,6 +18,7 @@ private let customRuleIdentifiers = [
     HeaderCommentRule.description.identifier,
     MultilineClosureArgumentRule.description.identifier,
     BlanklineFunctionRule.description.identifier,
+    CaseIndentRule.description.identifier,
 ]
 
 class IntegrationTests: XCTestCase {

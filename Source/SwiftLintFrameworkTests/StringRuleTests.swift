@@ -116,4 +116,8 @@ class StringRuleTests: XCTestCase {
     func testMultilineClosureArgument() {
         verifyRule(MultilineClosureArgumentRule.description, commentDoesntViolate: false)
     }
+
+    func testCaseIndentRule() {
+        verifyRule(CaseIndentRule.description, commentDoesntViolate: false)
+    }
 }

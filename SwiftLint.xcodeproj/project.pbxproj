@@ -37,6 +37,7 @@
 		C24DA5AD1BF300450025F8E8 /* VariableNameMaxLengthRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C24DA5931BF300450025F8E8 /* VariableNameMaxLengthRule.swift */; };
 		C24DA5AE1BF300450025F8E8 /* VariableNameMinLengthRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C24DA5941BF300450025F8E8 /* VariableNameMinLengthRule.swift */; };
 		C24DA5AF1BF300450025F8E8 /* VariableNameRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C24DA5951BF300450025F8E8 /* VariableNameRule.swift */; };
+		C2FF92811BF6B02400B5064A /* CaseIndentRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2FF927F1BF6B00500B5064A /* CaseIndentRule.swift */; };
 		D0AAAB5019FB0960007B24B3 /* SwiftLintFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0D1216D19E87B05005E4BAA /* SwiftLintFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D0D1217819E87B05005E4BAA /* SwiftLintFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D1216D19E87B05005E4BAA /* SwiftLintFramework.framework */; };
 		D0E7B65319E9C6AD00EDBA4D /* SwiftLintFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D1216D19E87B05005E4BAA /* SwiftLintFramework.framework */; };
@@ -162,6 +163,7 @@
 		C24DA5931BF300450025F8E8 /* VariableNameMaxLengthRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VariableNameMaxLengthRule.swift; sourceTree = "<group>"; };
 		C24DA5941BF300450025F8E8 /* VariableNameMinLengthRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VariableNameMinLengthRule.swift; sourceTree = "<group>"; };
 		C24DA5951BF300450025F8E8 /* VariableNameRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VariableNameRule.swift; sourceTree = "<group>"; };
+		C2FF927F1BF6B00500B5064A /* CaseIndentRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaseIndentRule.swift; sourceTree = "<group>"; };
 		D0D1211B19E87861005E4BAA /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; usesTabs = 0; };
 		D0D1212419E878CC005E4BAA /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		D0D1212619E878CC005E4BAA /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
@@ -456,6 +458,7 @@
 				C24DA5831BF300450025F8E8 /* FunctionBodyLengthRule.swift */,
 				C24DA5841BF300450025F8E8 /* HeaderCommentRule.swift */,
 				C24DA5851BF300450025F8E8 /* LeadingWhitespaceRule.swift */,
+				C2FF927F1BF6B00500B5064A /* CaseIndentRule.swift */,
 				C24DA5861BF300450025F8E8 /* LineLengthRule.swift */,
 				C24DA5871BF300450025F8E8 /* MultilineClosureArgumentRule.swift */,
 				C24DA5881BF300450025F8E8 /* NestingRule.swift */,
@@ -656,6 +659,7 @@
 				C24DA59C1BF300450025F8E8 /* ForceCastRule.swift in Sources */,
 				E86396C91BADB2B9002C9E88 /* JSONReporter.swift in Sources */,
 				E88DEA6F1B09843F00A66CB0 /* Location.swift in Sources */,
+				C2FF92811BF6B02400B5064A /* CaseIndentRule.swift in Sources */,
 				C24DA5A51BF300450025F8E8 /* OperatorFunctionWhitespaceRule.swift in Sources */,
 				C24DA5A91BF300450025F8E8 /* TrailingNewlineRule.swift in Sources */,
 				E88DEA771B098D0C00A66CB0 /* Rule.swift in Sources */,
