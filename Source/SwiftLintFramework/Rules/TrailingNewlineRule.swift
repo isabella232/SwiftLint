@@ -20,7 +20,7 @@ public struct TrailingNewlineRule: Rule {
     public func validateFile(file: File) -> [StyleViolation] {
         let string = file.contents
         let start = string.endIndex.advancedBy(-2, limit: string.startIndex)
-        let range = Range(start: start, end: string.endIndex)
+        let range = start ..< string.endIndex
         let substring = string[range].utf16
         let newLineSet = NSCharacterSet.newlineCharacterSet()
         let slices = substring.split(allowEmptySlices: true) { !newLineSet.characterIsMember($0) }

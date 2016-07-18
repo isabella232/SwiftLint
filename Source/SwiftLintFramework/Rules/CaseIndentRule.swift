@@ -47,7 +47,7 @@ public struct CaseIndentRule: Rule {
                 switchIndent = line.characters.count - trimmed.characters.count
 
                 if line.characters.contains("{") {
-                    bracketDepth++
+                    bracketDepth += 1
                 }
 
                 continue
@@ -69,11 +69,11 @@ public struct CaseIndentRule: Rule {
             }
 
             if line.characters.contains("{") {
-                bracketDepth++
+                bracketDepth += 1
             }
 
             if line.characters.contains("}") {
-                bracketDepth--
+                bracketDepth -= 1
             }
 
             if bracketDepth == 0 {

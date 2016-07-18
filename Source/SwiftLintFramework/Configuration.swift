@@ -68,7 +68,8 @@ public struct Configuration {
         // Validate that rule identifiers aren't listed multiple times
 
         if ruleSet.count != disabledRules.count {
-            let duplicateRules = disabledRules.reduce([String: Int]()) { (var accu, element) in
+            let duplicateRules = disabledRules.reduce([String: Int]()) { (accu, element) in
+                var accu = accu
                 accu[element] = accu[element]?.successor() ?? 1
                 return accu
             }.filter {

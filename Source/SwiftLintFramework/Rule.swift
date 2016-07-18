@@ -15,7 +15,7 @@ public protocol Rule {
 }
 
 public protocol ParameterizedRule: Rule {
-    typealias ParameterType
+    associatedtype ParameterType
     init(parameters: [RuleParameter<ParameterType>])
     var parameters: [RuleParameter<ParameterType>] { get }
 }

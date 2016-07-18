@@ -43,7 +43,8 @@ extension String {
         get {
             let subStart = startIndex.advancedBy(range.startIndex, limit: endIndex)
             let subEnd = subStart.advancedBy(range.endIndex - range.startIndex, limit: endIndex)
-            return substringWithRange(Range(start: subStart, end: subEnd))
+            let range = subStart ..< subEnd
+            return substringWithRange(range)
         }
     }
 
@@ -67,7 +68,7 @@ extension NSString {
         return byteRangeToNSRange(start: offset, length: 0).flatMap { range in
             var numberOfLines = 0, index = 0, lineRangeStart = 0, previousIndex = 0
             while index < length {
-                numberOfLines++
+                numberOfLines += 1
                 if index > range.location {
                     break
                 }

@@ -59,8 +59,7 @@ struct CacheCommand: CommandType {
     }
 
     private func protocolsFromFile(file: File) -> [String: String] {
-        let path: String! = file.path
-        if path == nil {
+        guard let path = file.path else {
             return [:]
         }
 
