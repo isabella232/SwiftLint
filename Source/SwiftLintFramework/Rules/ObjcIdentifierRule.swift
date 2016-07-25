@@ -12,7 +12,7 @@ public struct ObjcIdentifierRule: Rule {
     public init() {}
 
     private static let regex = try! NSRegularExpression(pattern:
-        "(^[^\\s]+\\s+@objc|@objc[^\\n_])", options: [])
+        "(^[^\\s]+\\s+@objc|@objc[^\\(\\n_])", options: [])
 
     public func validateFile(file: File) -> [StyleViolation] {
         let range = NSRange(location: 0, length: file.contents.utf16.count)
@@ -34,6 +34,7 @@ public struct ObjcIdentifierRule: Rule {
         nonTriggeringExamples: [
             "    @objc\n",
             "let foo: @objc_block () -> Void = {",
+            "@objc(foo)\n    func bar() {}",
         ],
         triggeringExamples: [
             "    private @objc func",
