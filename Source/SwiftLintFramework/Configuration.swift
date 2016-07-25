@@ -148,7 +148,6 @@ public struct Configuration {
             DocumentationCommentRule(),
             ObjcIdentifierRule(),
             HeaderCommentRule(),
-            BlanklineFunctionRule(),
             MultilineClosureArgumentRule(),
             CaseIndentRule(),
         ] + parameterRulesFromYAML(yaml)

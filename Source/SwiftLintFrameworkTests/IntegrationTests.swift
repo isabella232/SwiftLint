@@ -17,7 +17,6 @@ private let customRuleIdentifiers = [
     ObjcIdentifierRule.description.identifier,
     HeaderCommentRule.description.identifier,
     MultilineClosureArgumentRule.description.identifier,
-    BlanklineFunctionRule.description.identifier,
     CaseIndentRule.description.identifier,
 ]
 

@@ -109,10 +109,6 @@ class StringRuleTests: XCTestCase {
         verifyRule(ObjcIdentifierRule.description, commentDoesntViolate: false)
     }
 
-    func testBlanklineFunction() {
-        verifyRule(BlanklineFunctionRule.description, commentDoesntViolate: false)
-    }
-
     func testMultilineClosureArgument() {
         verifyRule(MultilineClosureArgumentRule.description, commentDoesntViolate: false)
     }
