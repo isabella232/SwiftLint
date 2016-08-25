@@ -145,7 +145,8 @@ public struct Configuration {
             OpeningBraceRule(),
             CommaRule(),
             StatementPositionRule(),
-            DocumentationCommentRule(),
+            // Disabiling for https://bugs.swift.org/browse/SR-2487
+            // DocumentationCommentRule(),
             ObjcIdentifierRule(),
             HeaderCommentRule(),
             MultilineClosureArgumentRule(),
